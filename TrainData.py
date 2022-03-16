@@ -20,7 +20,7 @@ for mouse in ["M03", "M04", "M05", "M06", "M07", "M08"]:
 
 # Plots
 fig, axs = plt.subplots(1,2, figsize=(10,10), sharex=True)
-axs[0].imshow(Train_voor[0][10],cmap = 'bone')
-axs[1].imshow(Train_na[5][10],cmap = 'bone')
+axs[0].imshow(Train_voor[0][100],cmap = 'bone')
+axs[1].imshow(Train_na[0][100],cmap = 'bone')
 
 plt.show()
