@@ -4,6 +4,11 @@ import pathlib
 import matplotlib.pyplot as plt
 #print('check 12')
 
+# Data:
+# 6 mice
+# 3 time instances (CT-scan)
+# 154 slices per scan; 121x242
+
 d = {}
 o = {}
 path = pathlib.Path(__file__).parent
