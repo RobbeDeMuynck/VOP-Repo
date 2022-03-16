@@ -37,15 +37,16 @@ axs[0].imshow(d["M08_-001h"][80],cmap = 'bone')
 axs[1].imshow(d["M08_0.25h"][80],cmap = 'bone')
 axs[2].imshow(d["M08_024h"][80],cmap = 'bone')
 
-#plt.show()
+plt.show()
+#print((d["M08_-001h"][80]))
 
 #Testje Organ --> onduidelijk nog
 
 # Plots
-fig, axs = plt.subplots(1,3, figsize=(10,10), sharex=True)
-axs[0].imshow(o["M08_-001h_Organ"][110],cmap = 'bone')
-axs[1].imshow(o["M08_0.25h_Organ"][110],cmap = 'bone')
-axs[2].imshow(o["M08_024h_Organ"][110],cmap = 'bone')
+#fig, axs = plt.subplots(1,3, figsize=(10,10), sharex=True)
+#axs[0].imshow(o["M08_-001h_Organ"][110],cmap = 'bone')
+#axs[1].imshow(o["M08_0.25h_Organ"][110],cmap = 'bone')
+#axs[2].imshow(o["M08_024h_Organ"][110],cmap = 'bone')
 
 
-plt.show()
+#plt.show()
