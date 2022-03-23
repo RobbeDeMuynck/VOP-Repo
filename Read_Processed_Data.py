@@ -38,9 +38,9 @@ for mouse in ["M03", "M04", "M05", "M06", "M07", "M08"]:
 
 # Plots
 fig, axs = plt.subplots(1,3, figsize=(10,10), sharex=True)
-axs[0].imshow(d["M08_-001h"][80],cmap = 'bone')
-axs[1].imshow(d["M08_0.25h"][80],cmap = 'bone')
-axs[2].imshow(d["M08_024h"][80],cmap = 'bone')
+axs[0].imshow(d["M08_-001h"][120],cmap = 'bone')
+axs[1].imshow(d["M08_0.25h"][120],cmap = 'bone')
+axs[2].imshow(d["M08_024h"][120],cmap = 'bone')
 plt.show()
 
 #print((d["M08_-001h"][80]))
