@@ -17,14 +17,16 @@ for timestamp in ["-001h", "024h"]:
             path_ct = path / f"processed/{mouse}_{timestamp}_CT280.img"
             Train_na.append(nib.load(path_ct).get_fdata())           
 
+
+# nuttige slices lopen van idx 25 tot 125
 Train_Data_001h = []
 Train_Data_024h = []
 for mouse in Train_voor:
-    for slice in mouse:
+    for slice in mouse[25:125]:
         Train_Data_001h.append(slice)
 
 for mouse in Train_na:
-    for slice in mouse:
+    for slice in mouse[25:125]:
         Train_Data_024h.append(slice)
 
 
@@ -35,17 +37,17 @@ for timestamp in ["-001h", "024h"]:
     mouse = "M08"
     path_ct = path / f"processed/{mouse}_{timestamp}_CT280.img"
     ct = nib.load(path_ct).get_fdata()
-    for slice in ct:
+    for slice in ct[25:125]:
         if timestamp == "-001h":
             Test_Data_001h.append(slice)
         else:
             Test_Data_024h.append(slice)
 
 
-#Train_Data_001h (770 slices)
-#Train_Data_024h (770 slices)
-#Test_Data_001h  (154 slices)
-#Test_Data_024h  (154 slices)
+#Train_Data_001h (500 slices)
+#Train_Data_024h (500 slices)
+#Test_Data_001h  (100 slices)
+#Test_Data_024h  (100 slices)
 
 
 
