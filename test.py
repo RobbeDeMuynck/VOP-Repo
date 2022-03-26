@@ -2,7 +2,7 @@
 
 ################################### DECLARING HYPERPARAMETERS  ##################################
 import params
-
+from train import *
 num_epochs = params.num_epochs
 batch_size = params.batch_size
 learning_rate = params.learning_rate
@@ -10,7 +10,6 @@ weight_decay = params.weight_decay
 
 
 ############################# IMPORTING THE NEEDED FUNCTIONS  #############################
-from train import *
 
 ############################# LOADING THE MODEL  #############################
 model_path = "model.pth"
