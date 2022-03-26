@@ -13,12 +13,12 @@ from torch.utils.data import Dataset, DataLoader
 from torch.utils.tensorboard import SummaryWriter
 import time
 import seaborn as sns
+import params
 
 device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 torch.cuda.empty_cache()
 
 ##################################### LOADING DATA  ##################################
-
 
 Train_voor = []
 Train_na = []
@@ -158,23 +158,25 @@ class UNet(nn.Module):
     def __init__(self):
         super().__init__() #residuals nog implementeren.
 
+        f1 = params.features
+
         """ Encoder """
-        self.e1 = encoder_block(1, 16)
-        self.e2 = encoder_block(16, 32)
-        self.e3 = encoder_block(32, 64)
-        self.e4 = encoder_block(64, 128)
+        self.e1 = encoder_block(1, f1)
+        self.e2 = encoder_block(f1, 2*f1)
+        self.e3 = encoder_block(2*f1, 4*f1)
+        self.e4 = encoder_block(4*f1, 8*f1)
 
         """ Bottleneck """
-        self.b = res_block(128, 256) # hoe beslis je eig hoeveel features je wilt per layer?
+        self.b = res_block(8*f1, 16*f1) # hoe beslis je eig hoeveel features je wilt per layer?
 
         """ Decoder """
-        self.d1 = decoder_block(256,128)
-        self.d2 = decoder_block(128,64)
-        self.d3 = decoder_block(64,32)
-        self.d4 = decoder_block(32,16)
+        self.d1 = decoder_block(16*f1,8*f1)
+        self.d2 = decoder_block(8*f1,4*f1)
+        self.d3 = decoder_block(4*f1,2*f1)
+        self.d4 = decoder_block(2*f1,f1)
 
         """ Last layer, i.e. de eigenlijke voorspelling """
-        self.outputs = nn.Conv2d(16, 1, kernel_size=1, padding=0)
+        self.outputs = nn.Conv2d(f1, 1, kernel_size=1, padding=0)
 
     def forward(self, inputs):
         """ Encoder """

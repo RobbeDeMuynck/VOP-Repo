@@ -26,7 +26,7 @@ n_total_steps = len(train_loader)
 
 model.train()
 
-print('Starten met trainen...')
+print('Starting with training...')
 for epoch in range(num_epochs):  # we itereren meerdere malen over de data tot convergence?
 
     for i, (batch_voor, batch_na) in enumerate(tqdm(train_loader)): #wat is een handige manier om dit in te lezen?

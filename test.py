@@ -7,6 +7,7 @@ batch_size = params.batch_size
 learning_rate = params.learning_rate
 weight_decay = params.weight_decay
 plotting = False
+
 ############################# IMPORTING THE NEEDED FUNCTIONS  #############################
 
 ############################# LOADING THE MODEL  #############################
@@ -20,7 +21,7 @@ model.load_state_dict(torch.load(model_path))
 
 test_loader = DataLoader(MuizenDataset(Test_Data_001h,Test_Data_024h),batch_size=batch_size,shuffle=True,drop_last=True)
 model.eval()
-print('Starten met testen...')
+print('Starting with testing...')
 
 
 losses = []
