@@ -1,13 +1,11 @@
 
-
 ################################### DECLARING HYPERPARAMETERS  ##################################
 import params
-from train import *
+from UNET import *
 num_epochs = params.num_epochs
 batch_size = params.batch_size
 learning_rate = params.learning_rate
 weight_decay = params.weight_decay
-
 
 ############################# IMPORTING THE NEEDED FUNCTIONS  #############################
 
@@ -24,8 +22,8 @@ test_loader = DataLoader(MuizenDataset(Test_Data_001h,Test_Data_024h),batch_size
 model.eval()
 print('Starten met testen...')
 
-runs_voor_na = []
-runs_pred_na = []
+
+losses = []
 for i, (batch_voor,batch_na) in enumerate(tqdm(test_loader)):
     #batch_voor = batch_voor.view(batch_size,1,121,242)
     #batch_na = batch_na.view(batch_size,1,121,242)
@@ -39,6 +37,7 @@ for i, (batch_voor,batch_na) in enumerate(tqdm(test_loader)):
     batch_na = torchvision.transforms.CenterCrop([H,W])(batch_na)
 
     loss = loss_function(predicted_batch,batch_na) #vergelijk predicted na image met de echte na image
+    losses.append(loss.item())
     if 1==2:
         for j in range(batch_size):
             fig = plt.subplots(figsize=(20,40))
@@ -56,5 +55,6 @@ for i, (batch_voor,batch_na) in enumerate(tqdm(test_loader)):
             plt.imshow(afb_pred.detach().numpy(),cmap='bone')
             plt.title('Predictie')
             plt.show()
-    
+
+print(f'The average test loss is: {np.mean(np.array(losses))}')
 
