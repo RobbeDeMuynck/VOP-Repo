@@ -270,8 +270,6 @@ for epoch in range(num_epochs):  # we itereren meerdere malen over de data tot c
         batch_voor = torchvision.transforms.CenterCrop([H,W])(batch_voor)
 
     print(f'Epoch: {epoch},         Loss: {loss.item()}')
-            
-
 
 ##################################### SAVING THE MODEL  ##################################
 model_path = "model.pth"
