@@ -6,7 +6,7 @@ num_epochs = params.num_epochs
 batch_size = params.batch_size
 learning_rate = params.learning_rate
 weight_decay = params.weight_decay
-
+plotting = False
 ############################# IMPORTING THE NEEDED FUNCTIONS  #############################
 
 ############################# LOADING THE MODEL  #############################
@@ -38,7 +38,7 @@ for i, (batch_voor,batch_na) in enumerate(tqdm(test_loader)):
 
     loss = loss_function(predicted_batch,batch_na) #vergelijk predicted na image met de echte na image
     losses.append(loss.item())
-    if 1==2:
+    if plotting==True:
         for j in range(batch_size):
             fig = plt.subplots(figsize=(20,40))
             afb_pred = predicted_batch[j][0].cpu()
@@ -57,4 +57,3 @@ for i, (batch_voor,batch_na) in enumerate(tqdm(test_loader)):
             plt.show()
 
 print(f'The average test loss is: {np.mean(np.array(losses))}')
-
