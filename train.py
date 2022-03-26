@@ -236,7 +236,7 @@ class MuizenDataset(Dataset):
 
 
 ################################## TRAINING  ##################################
-
+print('Starten met trainen...')
 def MSE(input,output):
     return np.mean((input.detach().cpu().numpy()-output.detach().cpu().numpy())**2)
 

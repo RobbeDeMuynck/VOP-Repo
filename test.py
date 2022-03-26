@@ -10,7 +10,7 @@ weight_decay = params.weight_decay
 
 
 ############################# IMPORTING THE NEEDED FUNCTIONS  #############################
-from .train import *
+from train import *
 
 ############################# LOADING THE MODEL  #############################
 model_path = "model.pth"
@@ -23,6 +23,7 @@ model.load_state_dict(torch.load(model_path))
 
 test_loader = DataLoader(MuizenDataset(Test_Data_001h,Test_Data_024h),batch_size=batch_size,shuffle=True,drop_last=True)
 model.eval()
+print('Starten met testen...')
 
 runs_voor_na = []
 runs_pred_na = []
@@ -41,7 +42,6 @@ for i, (batch_voor,batch_na) in enumerate(tqdm(test_loader)):
     loss = loss_function(predicted_batch,batch_na) #vergelijk predicted na image met de echte na image
     if 1==2:
         for j in range(batch_size):
-
             fig = plt.subplots(figsize=(20,40))
             afb_pred = predicted_batch[j][0].cpu()
             afb_voor = batch_voor[j][0].cpu()
