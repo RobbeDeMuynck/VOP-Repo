@@ -24,5 +24,5 @@ dj[kolommen[-1]] = np.log10(np.array(data[-1]))
 
 Data = pd.DataFrame(data=dj,columns=kolommen)
 print(Data.head())
-sns.relplot(x="batch size", y="Loss", hue="learning rate", size="number of epochs",sizes=(40, 800), alpha=.5, palette="crest",height=6, data=Data)
+sns.relplot(x="batch size", y="Loss", hue="learning rate", style = "number of epochs",size="number of starting features",sizes=(40, 800), alpha=.5, palette="crest",height=6, data=Data)
 plt.show()
