@@ -98,7 +98,7 @@ def TRAIN(input, target, val_input, val_target,
         if loss_stats["val"][-1] < best_loss:
             best_loss, epoch_no = loss_stats["val"][-1], epoch
             if save == True:
-                torch.save(model.state_dict(), model_name+'.pth')
+                torch.save(model.state_dict(), '/MODELS/'+model_name+'.pth')
                 print(f"    --> Model saved at epoch no. {epoch_no}")
         
         print(f"""
