@@ -4,7 +4,7 @@ import MiceData
 from UNET import *
 
 model_path = "model_test.pth"
-patience = 1
+patience = 2
 
 ################################### DECLARING HYPERPARAMETERS  ##################################
 num_epochs = params.num_epochs
@@ -36,8 +36,8 @@ train_loader = DataLoader(
                 drop_last=True
                 )
 # test_loader = DataLoader(
-#                 MuizenDataset(input, target),
-#                 batch_size=len(input),
+#                 MuizenDataset(?, ?),
+#                 batch_size=batch_size,
 #                 shuffle=True,
 #                 )
 val_loader = DataLoader(
@@ -96,10 +96,11 @@ for epoch in range(num_epochs):  # we itereren meerdere malen over de data tot c
     loss_stats["train"].append(train_epoch_loss/len(train_loader))
     loss_stats["val"].append(val_epoch_loss/len(val_loader))
     print(f"""Epoch: {epoch+1}
-        Training loss: {loss_stats["train"][-1]};\t Validation loss: {loss_stats["val"][-1]}""")
+        Training loss: {loss_stats["train"][-1]};\t Validation loss: {loss_stats["val"][-1]}
+        Best loss: {best_loss}""")
     
-    if val_loss < best_loss:
-        best_loss, epoch_no = val_loss, epoch+1
+    if val_epoch_loss < best_loss:
+        best_loss, epoch_no = val_epoch_loss, epoch+1
         torch.save(model.state_dict(), model_path)
 
     if all(loss_stats['val'][-patience:]) >= best_loss:
