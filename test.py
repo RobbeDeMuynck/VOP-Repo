@@ -11,6 +11,8 @@ weight_decay = params.weight_decay
 plotting = False
 input = MiceData.Test_transversal_001h
 target = MiceData.Test_transversal_024h
+# input = MiceData.Train_transversal_001h
+# target = MiceData.Train_transversal_024h
 
 ############################# IMPORTING THE NEEDED FUNCTIONS  #############################
 
