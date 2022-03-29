@@ -55,7 +55,7 @@ class res_block(nn.Module): #dit is 1 blok van 2 convs gevolgd door een relu
  
         self.relu = nn.ReLU() #evt leaky ReLu??
 
-        ###SKIP CONNECTION (Identity Mapping)
+        ### SKIP CONNECTION (Identity Mapping)
         self.s = nn.Conv2d(in_channels,out_channels,kernel_size=1,padding=0)
 
     def forward(self, inputs):
