@@ -118,18 +118,18 @@ print(f"""Training_losses = {loss_stats["train"]}
 Validation_losses = {loss_stats["val"]}""")
 
 ##################################### Plotting MODEL losses  ##################################
-plt.semilogy(loss_stats["train"], label='Training losses')
-plt.semilogy(loss_stats["val"], label='Validation losses')
-plt.ylabel('MSE loss')
-plt.xlabel('Epoch')
-plt.legend()
-plt.grid()
-plt.show()
+# plt.semilogy(loss_stats["train"], label='Training losses')
+# plt.semilogy(loss_stats["val"], label='Validation losses')
+# plt.ylabel('MSE loss')
+# plt.xlabel('Epoch')
+# plt.legend()
+# plt.grid()
+# plt.show()
 
 ##################################### WRITE MODEL IN RUNLOG   ##################################
 run_name = 'TEST'
-with open('runlog.txt', 'r+') as file:
-    data = json.load(file)
+with open('runlog.json', 'w+') as file:
+    data = {}
     run = {
         'num_epochs': num_epochs,
         'batch_size': batch_size,
@@ -140,4 +140,4 @@ with open('runlog.txt', 'r+') as file:
         'val_loss': loss_stats["train"]
     }
     data[run_name] = run
-    json.dump(data, file)
+    json.dump(data, file, indent=4)

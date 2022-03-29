@@ -1,0 +1,17 @@
+{
+    "TEST": {
+        "num_epochs": 2,
+        "batch_size": 4,
+        "learning_rate": 0.01,
+        "weight_decay": 0.001,
+        "patience": 5,
+        "train_loss": [
+            400831.6532491722,
+            114503.9031230598
+        ],
+        "val_loss": [
+            400831.6532491722,
+            114503.9031230598
+        ]
+    }
+}
