@@ -167,6 +167,7 @@ class MuizenDataset(Dataset):
         input = self.data_voor[index]
         target = self.data_na[index]
         
+        ###  DATA AUGMENTATION
         if torch.rand(1) < self.p:
             input = np.flipud(input)
             target = np.flipud(target)
@@ -174,7 +175,7 @@ class MuizenDataset(Dataset):
         if torch.rand(1) < self.p:
             input = np.fliplr(input)
             target = np.fliplr(target)
-        ###  DATA AUGMENTATION
+        
         input = torch.from_numpy(input.copy())
         target = torch.from_numpy(target.copy())
         input = input.unsqueeze(0)
