@@ -11,6 +11,7 @@ batch_size = params.batch_size
 learning_rate = params.learning_rate
 weight_decay = params.weight_decay
 patience = params.patience
+features = params.features
 
 ################################### LOADING DATA TRANSVERSAL  ###################################
 input = MiceData.Train_transversal_001h
@@ -21,7 +22,7 @@ val_target = MiceData.Test_transversal_024h
 ################################## TRAINING  ##########################################
 
 run = TRAIN(input, target, val_input, val_target,
-        num_epochs, batch_size, learning_rate, weight_decay, patience,
+        num_epochs, batch_size, learning_rate, weight_decay, patience, features,
         model_name='TEST', save=True)
 
 ##################################### WRITE MODEL IN RUNLOG   ##################################
