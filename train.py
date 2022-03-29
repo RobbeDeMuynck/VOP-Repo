@@ -59,6 +59,6 @@ for epoch in range(num_epochs):  # we itereren meerdere malen over de data tot c
     print(f'Epoch: {epoch}, Loss: {loss.item()}')
 
 ##################################### SAVING THE MODEL  ##################################
-model_path = "model.pth"
+model_path = "model_test.pth"
 torch.save(model.state_dict(),model_path)
-print('Model trained succesfully and saved as model.pth')
+print('Model trained succesfully and saved as {model_path}')
