@@ -4,14 +4,13 @@ import MiceData
 from UNET import *
 
 model_path = "model_test.pth"
-patience = 2
 
 ################################### DECLARING HYPERPARAMETERS  ##################################
 num_epochs = params.num_epochs
-num_epochs = 20
 batch_size = params.batch_size
 learning_rate = params.learning_rate
 weight_decay = params.weight_decay
+patience = params.patience
 
 ################################### LOADING DATA TRANSVERSAL  ###################################
 input = MiceData.Train_transversal_001h
@@ -55,7 +54,7 @@ loss_stats = {
     }
 
 best_loss = np.inf
-for epoch in range(num_epochs):  # we itereren meerdere malen over de data tot convergence?
+for epoch in range(1, num_epochs+1):  # we itereren meerdere malen over de data tot convergence?
     model.train()
     train_epoch_loss = 0
     
@@ -97,17 +96,17 @@ for epoch in range(num_epochs):  # we itereren meerdere malen over de data tot c
     loss_stats["val"].append(val_epoch_loss/len(val_loader))
     
     if loss_stats["val"][-1] < best_loss:
-        best_loss, epoch_no = loss_stats["val"][-1], epoch+1
+        best_loss, epoch_no = loss_stats["val"][-1], epoch
         torch.save(model.state_dict(), model_path)
     
-    print(f"""Epoch: {epoch+1}
+    print(f"""Epoch: {epoch}/{num_epochs}
 Training loss: {loss_stats["train"][-1]};\t Validation loss: {loss_stats["val"][-1]}
 Best loss: {best_loss}
 Last validation losses: {loss_stats['val'][-patience:]}""")
 
     if np.all(np.array(loss_stats['val'][-patience:]) > best_loss):
         print(f"""
-Training terminated after epoch no. {epoch+1}
+Training terminated after epoch no. {epoch}
 Model saved as '{model_path}': version at epoch no. {epoch_no}""")
 
         break
@@ -117,4 +116,11 @@ Model saved as '{model_path}': version at epoch no. {epoch_no}""")
 print(f"""Training_losses = {loss_stats["train"]}
 Validation_losses = {loss_stats["val"]}""")
 
-##################################### SAVING THE MODEL  ##################################
+##################################### Plotting THE MODEL  ##################################
+plt.semilogy(loss_stats["train"], label='Training losses')
+plt.semilogy(loss_stats["val"], label='Validation losses')
+plt.ylabel('MSE loss')
+plt.xlabel('Epoch number')
+plt.legend()
+plt.grid()
+plt.show()
