@@ -8,7 +8,7 @@ patience = 2
 
 ################################### DECLARING HYPERPARAMETERS  ##################################
 num_epochs = params.num_epochs
-num_epochs = 6
+num_epochs = 20
 batch_size = params.batch_size
 learning_rate = params.learning_rate
 weight_decay = params.weight_decay
@@ -95,21 +95,26 @@ for epoch in range(num_epochs):  # we itereren meerdere malen over de data tot c
     
     loss_stats["train"].append(train_epoch_loss/len(train_loader))
     loss_stats["val"].append(val_epoch_loss/len(val_loader))
-    print(f"""Epoch: {epoch+1}
-        Training loss: {loss_stats["train"][-1]};\t Validation loss: {loss_stats["val"][-1]}
-        Best loss: {best_loss}""")
     
-    if val_epoch_loss < best_loss:
-        best_loss, epoch_no = val_epoch_loss, epoch+1
+    if loss_stats["val"][-1] < best_loss:
+        best_loss, epoch_no = loss_stats["val"][-1], epoch+1
         torch.save(model.state_dict(), model_path)
+    
+    print(f"""Epoch: {epoch+1}
+Training loss: {loss_stats["train"][-1]};\t Validation loss: {loss_stats["val"][-1]}
+Best loss: {best_loss}
+Last validation losses: {loss_stats['val'][-patience:]}""")
 
-    if all(loss_stats['val'][-patience:]) >= best_loss:
+    if np.all(np.array(loss_stats['val'][-patience:]) > best_loss):
         print(f"""
-            Training terminated after epoch no. {epoch+1}.
-            Model saved as '{model_path}': version at epoch no. {epoch_no}""")
+Training terminated after epoch no. {epoch+1}
+Model saved as '{model_path}': version at epoch no. {epoch_no}""")
+
         break
     elif epoch == num_epochs-1:
         print(f"Model trained succesfully and saved as: '{model_path}'")
 
-##################################### SAVING THE MODEL  ##################################
+print(f"""Training_losses = {loss_stats["train"]}
+Validation_losses = {loss_stats["val"]}""")
 
+##################################### SAVING THE MODEL  ##################################
