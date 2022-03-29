@@ -4,7 +4,7 @@ from UNET import *
 from train import TRAIN
 import json
 
-model_name = "model_test2"
+#model_name = "model_test2"
 ################################### DECLARING HYPERPARAMETERS  ##################################
 num_epochs = params.num_epochs
 batch_size = params.batch_size
