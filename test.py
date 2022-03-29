@@ -15,7 +15,7 @@ target = MiceData.Test_transversal_024h
 ############################# IMPORTING THE NEEDED FUNCTIONS  #############################
 
 ############################# LOADING THE MODEL  #############################
-model_path = "model.pth"
+model_path = "model_test.pth"
 model = UNet().to(device)
 model.load_state_dict(torch.load(model_path))
 

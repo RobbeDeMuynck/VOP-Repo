@@ -61,4 +61,4 @@ for epoch in range(num_epochs):  # we itereren meerdere malen over de data tot c
 ##################################### SAVING THE MODEL  ##################################
 model_path = "model_test.pth"
 torch.save(model.state_dict(),model_path)
-print('Model trained succesfully and saved as {model_path}')
+print('Model trained succesfully and saved as: {model_path}')
