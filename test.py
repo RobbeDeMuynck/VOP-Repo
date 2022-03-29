@@ -8,6 +8,9 @@ num_epochs = params.num_epochs
 batch_size = params.batch_size
 learning_rate = params.learning_rate
 weight_decay = params.weight_decay
+patience = params.patience
+features = params.features
+
 plotting = True
 input = MiceData.Test_transversal_001h
 target = MiceData.Test_transversal_024h
@@ -20,7 +23,7 @@ target = MiceData.Test_transversal_024h
 
 ############################# LOADING THE MODEL  #############################
 model_path = "model_test.pth"
-model = UNet().to(device)
+model = UNet(features).to(device)
 model.load_state_dict(torch.load(model_path))
 
 

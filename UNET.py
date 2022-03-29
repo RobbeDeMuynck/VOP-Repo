@@ -105,7 +105,7 @@ class decoder_block(nn.Module):
 
 ##################################### COMBINING BUILDING BLOCKS TO RESUNET##################################
 
-class UNet(nn.Module):
+class UNet(nn.Module, f1=10):
     def __init__(self):
         super().__init__() #residuals nog implementeren.
 
