@@ -7,8 +7,8 @@ from tqdm import tqdm
 from torch.optim import Adam
 from torch.autograd import Variable
 from torchvision.transforms import transforms
-import pathlib
-import nibabel as nib
+# import pathlib
+# import nibabel as nib
 from torch.utils.data import Dataset, DataLoader
 from torch.utils.tensorboard import SummaryWriter
 import time
@@ -153,7 +153,7 @@ class UNet(nn.Module):
 
 class MuizenDataset(Dataset):
 
-    def __init__(self,data_voor,data_na,p=0.5):
+    def __init__(self, data_voor, data_na, p=0.5):
         super().__init__()
         self.data_voor = (data_voor - np.mean(data_voor))/np.std(data_voor) #vanwege de kleine dataset laden we het gewoon helemaal in memory en normaliseren we in place
         self.data_na = (data_na - np.mean(data_na))-np.std(data_na)
@@ -181,6 +181,6 @@ class MuizenDataset(Dataset):
         target = target.unsqueeze(0)
         
         return input.float(), target.float()
-#onze laatste batch is incomplete dus deze laten we vallen
+# onze laatste batch is incomplete dus deze laten we vallen
 
 loss_function = nn.MSELoss()
