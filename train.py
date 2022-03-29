@@ -4,11 +4,11 @@ import MiceData
 from UNET import *
 
 model_path = "model_test.pth"
-patience = 2
+patience = 1
 
 ################################### DECLARING HYPERPARAMETERS  ##################################
 num_epochs = params.num_epochs
-# num_epochs = 2
+num_epochs = 6
 batch_size = params.batch_size
 learning_rate = params.learning_rate
 weight_decay = params.weight_decay
@@ -91,16 +91,24 @@ for epoch in range(num_epochs):  # we itereren meerdere malen over de data tot c
             val_target_batch = torchvision.transforms.CenterCrop([H,W])(val_target_batch)
 
             val_loss = loss_function(val_pred, val_target_batch)
-            val_epoch_loss += val_loss
+            val_epoch_loss += val_loss.item()
     
     loss_stats["train"].append(train_epoch_loss/len(train_loader))
     loss_stats["val"].append(val_epoch_loss/len(val_loader))
+    print(f"""Epoch: {epoch+1}
+        Training loss: {loss_stats["train"][-1]};\t Validation loss: {loss_stats["val"][-1]}""")
     
-    if loss_stats['val'][-1] > best_loss:
-        best_loss = loss_stats['val']
+    if val_loss < best_loss:
+        best_loss, epoch_no = val_loss, epoch+1
         torch.save(model.state_dict(), model_path)
-        
-    print(f'Epoch: {epoch+1}, Loss: {loss_stats["train"][-1]}')
+
+    if all(loss_stats['val'][-patience:]) >= best_loss:
+        print(f"""
+            Training terminated after epoch no. {epoch+1}.
+            Model saved as '{model_path}': version at epoch no. {epoch_no}""")
+        break
+    elif epoch == num_epochs-1:
+        print(f"Model trained succesfully and saved as: '{model_path}'")
 
 ##################################### SAVING THE MODEL  ##################################
-print(f'Model trained succesfully and saved as: {model_path}')
+
