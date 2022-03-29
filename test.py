@@ -51,7 +51,7 @@ for i, (input_batch,target_batch) in enumerate(tqdm(test_loader)):
     loss = loss_function(prediction_batch,target_batch) #vergelijk predicted na image met de echte na image
     losses.append(loss.item())
 
-    if plotting == True:
+    if plotting == True and i%50 == 0:
         for j in range(batch_size):
             fig = plt.subplots(figsize=(20,40))
             img_pred = prediction_batch[j][0].cpu()
