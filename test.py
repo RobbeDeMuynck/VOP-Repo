@@ -68,17 +68,6 @@ for i, (input_batch,target_batch) in enumerate(tqdm(test_loader)):
     loss = loss_function(prediction_batch,target_batch) #vergelijk predicted na image met de echte na image
     losses.append(loss.item())
 
-<<<<<<< HEAD
-    if plotting == True and i%5 == 0:
-        for j in range(batch_size):
-            fig = plt.subplots(figsize=(20,40))
-            img_pred = prediction_batch[j][0].cpu()
-            img_input = input_batch[j][0].cpu()
-            img_target = target_batch[j][0].cpu()
-            plt.subplot(1,3,1)
-            plt.imshow(img_input.detach().cpu().numpy(),cmap='viridis')
-            plt.title('Before injection')
-=======
     # if plotting == True and i%80 == 0:
     #     for j in range(batch_size):
     #         fig = plt.subplots(figsize=(20,40))
