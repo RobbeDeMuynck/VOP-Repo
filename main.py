@@ -18,7 +18,7 @@ batch_sizes = [4, 8, 16]
 learning_rates = [0.01, 0.005, .001]
 weight_decay = 0.09
 patience = 5
-features = [4, 10, 16]
+features = [4, 10, 16, 32]
 
 
 ################################### LOADING DATA TRANSVERSAL  ###################################
