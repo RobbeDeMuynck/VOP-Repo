@@ -12,17 +12,20 @@ patience = params.patience
 features = params.features
 
 plotting = True
-input = MiceData.Test_transversal_001h
-target = MiceData.Test_transversal_024h
+input = MiceData.Test_coronal_001h
+target = MiceData.Test_coronal_024h
+#input = MiceData.Test_transversal_001h
+#target = MiceData.Test_transversal_024h
 # input = MiceData.Train_transversal_001h
 # target = MiceData.Train_transversal_024h
 # input = MiceData.Test_sagittal_001h
 # target = MiceData.Test_sagittal_024h
 
+
 ############################# IMPORTING THE NEEDED FUNCTIONS  #############################
 
 ############################# LOADING THE MODEL  #############################
-model_path = "model_test.pth"
+model_path = "MODELS\BS=8;LR=0.001;WD=0.09;FT=4.pth"
 model = UNet(features).to(device)
 model.load_state_dict(torch.load(model_path))
 
@@ -56,7 +59,7 @@ for i, (input_batch,target_batch) in enumerate(tqdm(test_loader)):
     loss = loss_function(prediction_batch,target_batch) #vergelijk predicted na image met de echte na image
     losses.append(loss.item())
 
-    if plotting == True and i%80 == 0:
+    if plotting == True and i%5 == 0:
         for j in range(batch_size):
             fig = plt.subplots(figsize=(20,40))
             img_pred = prediction_batch[j][0].cpu()

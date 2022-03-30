@@ -13,10 +13,10 @@ patience = params.patience
 features = params.features
 
 ################################### LOADING DATA TRANSVERSAL  ###################################
-input = MiceData.Train_transversal_001h
-target = MiceData.Train_transversal_024h
-val_input = MiceData.Test_transversal_001h
-val_target = MiceData.Test_transversal_024h
+input = MiceData.Train_coronal_001h
+target = MiceData.Train_coronal_024h
+val_input = MiceData.Test_coronal_001h
+val_target = MiceData.Test_coronal_024h
 
 ################################## TRAINING  ##################################
 def TRAIN(input, target, val_input, val_target,
