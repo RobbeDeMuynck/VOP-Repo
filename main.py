@@ -13,7 +13,7 @@ import json
 # patience = params.patience
 # features = params.features
 
-num_epochs = 120
+num_epochs = 2
 batch_sizes = [4, 8, 12]
 learning_rates = [0.01, 0.005, .001]
 weight_decay = 0.09
@@ -39,7 +39,7 @@ for BS in batch_sizes:
                     num_epochs, BS, LR, weight_decay, patience, FT,
                     model_name=model_name, save=True)
             # data[model_name] = run
-            with open(f'/runlogs/{model_name}.json', 'w+') as file:
+            with open(f'runlogs/{model_name}.json', 'w+') as file:
                 json.dump(run, file, indent=4)
 
 
