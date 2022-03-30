@@ -29,17 +29,17 @@ val_target = MiceData.Test_transversal_024h
 
 ################################## TRAINING  ##########################################
 ############################# WRITE MODEL IN RUNLOG   ##################################
-with open('runlog.json', 'w+') as file:
-    data = {}
-    WD = weight_decay
-    for BS in batch_sizes:
-        for LR in learning_rates:
-            for FT in features:
-                model_name = f'BS={BS};LR={LR};WD={WD};FT={FT}'
-                run = TRAIN(input, target, val_input, val_target,
-                        num_epochs, BS, LR, weight_decay, patience, FT,
-                        model_name=model_name, save=True)
-                data[model_name] = run
-    json.dump(data, file, indent=4)
+# data = {}
+WD = weight_decay
+for BS in batch_sizes:
+    for LR in learning_rates:
+        for FT in features:
+            model_name = f'BS={BS};LR={LR};WD={WD};FT={FT}'
+            run = TRAIN(input, target, val_input, val_target,
+                    num_epochs, BS, LR, weight_decay, patience, FT,
+                    model_name=model_name, save=True)
+            # data[model_name] = run
+            with open(f'/runlogs/{model_name}.json', 'w+') as file:
+                json.dump(run, file, indent=4)
 
 
