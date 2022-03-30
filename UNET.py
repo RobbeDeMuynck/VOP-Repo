@@ -105,8 +105,8 @@ class decoder_block(nn.Module):
 
 ##################################### COMBINING BUILDING BLOCKS TO RESUNET##################################
 
-class UNet(nn.Module, f1=10):
-    def __init__(self):
+class UNet(nn.Module):
+    def __init__(self, f1=10):
         super().__init__() #residuals nog implementeren.
 
         f1 = params.features

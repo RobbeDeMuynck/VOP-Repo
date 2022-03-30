@@ -98,7 +98,7 @@ def TRAIN(input, target, val_input, val_target,
         if loss_stats["val"][-1] < best_loss:
             best_loss, epoch_no = loss_stats["val"][-1], epoch
             if save == True:
-                torch.save(model.state_dict(), '/MODELS/'+model_name+'.pth')
+                torch.save(model.state_dict(), 'MODELS/'+model_name+'.pth')
                 print(f"    --> Model saved at epoch no. {epoch_no}")
         
         print(f"""
@@ -113,6 +113,7 @@ def TRAIN(input, target, val_input, val_target,
 
             break
         elif epoch == num_epochs:
+            epoch_no = epoch
             print(f"Model trained succesfully and saved as: '{model_name}.pth'")
 
     # print(f"""Training_losses = {loss_stats["train"]}
@@ -125,8 +126,10 @@ def TRAIN(input, target, val_input, val_target,
         'learning_rate': learning_rate,
         'weight_decay': weight_decay,
         'patience': patience,
+        'features': features,
         'train_loss': loss_stats["train"],
-        'val_loss': loss_stats["train"]
+        'val_loss': loss_stats["val"], 
+        'num_epoch_convergence': epoch_no
     }
     return run
 
