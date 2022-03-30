@@ -9,6 +9,7 @@ import json
 from pathlib import Path
 
 files = Path('runlogs').glob('*')
+
 # cols = ["Batch size","Learning rate","Weight decay","Starting features","Minimum validation loss","Epochs till convergence"]
 # vals = {col: [] for col in cols}
 # for file in files:
@@ -29,23 +30,30 @@ files = Path('runlogs').glob('*')
 # plt.show()
 
 losses = []
+PAR = [(8, 0.001, 0.09, 4)]
 for file in files:
     with open(file, "r") as RUN:
         run = json.load(RUN)
         params = run["batch_size"], run["learning_rate"], run["weight_decay"], run["features"]
         train_loss = run["train_loss"]
-        losses.append([params, train_loss])
+        val_loss = run["val_loss"]
+        if params in PAR:
+            losses = train_loss, val_loss
+            print(run["num_epoch_convergence"])
 
 n = len(losses)
 palette = sns.color_palette("mako_r", n)
+palette = sns.color_palette("crest", n)
 fig, ax = plt.subplots(1, 1)
-for i, loss in enumerate(losses):
-    BS, LR, WD, FT = tuple(loss[0])
-    train_loss = loss[1]
-    ax.plot(train_loss, color=palette[i], label=f'BS={BS};LR={LR};WD={WD};FT={FT}')
+ax.semilogy(losses[0], color=palette[0], label='Training losses')
+ax.semilogy(losses[1], color=palette[1], label='Validation losses')
+ax.axvline(x=np.argmin(losses[1]), c='k', ls='--', label='Last saved version')
+#f'BS=%d, LR=%.3f, WD=%.2f, FT=%d'%tuple(PAR[0])
+ax.set_title('MSE loss decay per epoch')
 ax.set_xlabel('Epoch number')
 ax.set_ylabel('Training losses')
 ax.legend()
+ax.grid()
 plt.show()
 
 # sns.lineplot(data=Data, y="Training", palette=palette)
