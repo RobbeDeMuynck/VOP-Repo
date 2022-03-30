@@ -14,13 +14,11 @@ import json
 # features = params.features
 
 num_epochs = 60
-batch_sizes = [4]
-# learning_rates = [0.01, 0.005, .001]
-learning_rates = [0.01]
+batch_sizes = [4, 8, 16]
+learning_rates = [0.01, 0.005, .001]
 weight_decay = 0.09
 patience = 5
-# features = [4, 10, 16]
-features = [10]
+features = [4, 10, 16]
 
 
 ################################### LOADING DATA TRANSVERSAL  ###################################
