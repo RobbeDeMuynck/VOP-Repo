@@ -14,7 +14,7 @@ import json
 # features = params.features
 
 num_epochs = 60
-batch_sizes = [4, 8, 16]
+batch_sizes = [4, 8, 12]
 learning_rates = [0.01, 0.005, .001]
 weight_decay = 0.09
 patience = 5
