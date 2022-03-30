@@ -13,7 +13,7 @@ import json
 # patience = params.patience
 # features = params.features
 
-num_epochs = 60
+num_epochs = 120
 batch_sizes = [4, 8, 12]
 learning_rates = [0.01, 0.005, .001]
 weight_decay = 0.09
