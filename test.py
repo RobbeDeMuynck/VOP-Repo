@@ -77,7 +77,6 @@ for i, (input_batch,target_batch) in enumerate(tqdm(test_loader)):
     #         plt.subplot(1,3,1)
     #         plt.imshow(img_input.detach().cpu().numpy(),cmap='viridis')
     #         plt.title('Before injection')
->>>>>>> 7965dfe55ca1dd3c11c6b7a3db8b4db1952cf08f
             
     #         plt.subplot(1,3,2)
     #         plt.imshow(img_target.detach().numpy(),cmap='viridis')
