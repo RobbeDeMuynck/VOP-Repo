@@ -23,7 +23,6 @@ for file in files:
         vals['Starting features'].append(run["features"])
         vals["Minimum validation loss"].append(min(run["val_loss"]))
         vals["Epochs till convergence"].append(run["num_epoch_convergence"])
-        # print('RUN')
 
 Data = pd.DataFrame(data=vals,columns=cols)
 print(Data.head())
