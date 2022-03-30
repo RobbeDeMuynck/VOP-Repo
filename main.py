@@ -14,18 +14,18 @@ import json
 # features = params.features
 
 num_epochs = 120
-batch_sizes = [4, 8, 12]
-learning_rates = [0.01, 0.005, .001]
+batch_sizes = [8]
+learning_rates = [.001]
 weight_decay = 0.09
 patience = 5
-features = [4, 10, 16]
+features = [16]
 
 
-################################### LOADING DATA TRANSVERSAL  ###################################
-input = MiceData.Train_transversal_001h
-target = MiceData.Train_transversal_024h
-val_input = MiceData.Test_transversal_001h
-val_target = MiceData.Test_transversal_024h
+################################### LOADING DATA CORONAL  ###################################
+input = MiceData.Train_coronal_001h
+target = MiceData.Train_coronal_024h
+val_input = MiceData.Test_coronal_001h
+val_target = MiceData.Test_coronal_024h
 
 ################################## TRAINING  ##########################################
 ############################# WRITE MODEL IN RUNLOG   ##################################
