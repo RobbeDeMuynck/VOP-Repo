@@ -12,29 +12,18 @@ patience = params.patience
 features = params.features
 
 plotting = True
-<<<<<<< HEAD
 input = MiceData.Test_coronal_001h
 target = MiceData.Test_coronal_024h
 #input = MiceData.Test_transversal_001h
 #target = MiceData.Test_transversal_024h
-=======
-# input = MiceData.Test_transversal_001h
-# target = MiceData.Test_transversal_024h
->>>>>>> 7965dfe55ca1dd3c11c6b7a3db8b4db1952cf08f
 # input = MiceData.Train_transversal_001h
 # target = MiceData.Train_transversal_024h
-input = MiceData.Test_sagittal_001h
-target = MiceData.Test_sagittal_024h
 
 
 ############################# IMPORTING THE NEEDED FUNCTIONS  #############################
 
 ############################# LOADING THE MODEL  #############################
-<<<<<<< HEAD
 model_path = "MODELS\BS=8;LR=0.001;WD=0.09;FT=4.pth"
-=======
-model_path = "MODELS/BS=8;LR=0.001;WD=0.09;FT=4.pth"
->>>>>>> 7965dfe55ca1dd3c11c6b7a3db8b4db1952cf08f
 model = UNet(features).to(device)
 model.load_state_dict(torch.load(model_path))
 
