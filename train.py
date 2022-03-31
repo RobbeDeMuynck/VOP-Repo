@@ -1,7 +1,7 @@
 
 import params
 import MiceData
-from UNET import *
+from UNETleaky import *
 import json
 
 ################################### DECLARING HYPERPARAMETERS  ##################################

@@ -34,7 +34,7 @@ WD = weight_decay
 for BS in batch_sizes:
     for LR in learning_rates:
         for FT in features:
-            model_name = f'BS={BS};LR={LR};WD={WD};FT={FT}'
+            model_name = f'BS={BS};LR={LR};WD={WD};FT={FT};LEAKY'
             run = TRAIN(input, target, val_input, val_target,
                     num_epochs, BS, LR, weight_decay, patience, FT,
                     model_name=model_name, save=True)
