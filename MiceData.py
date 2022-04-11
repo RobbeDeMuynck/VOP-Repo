@@ -7,8 +7,8 @@ def prep_data(test_mouse=0): #test mouse kan index 0-5 hebben
     Train_voor = []
     Train_na = []
     mouses = ["M03", "M04", "M05", "M06", "M07","M08"]
-    train_mouses = [mouses[i] for i in range(len(mouses)) if i!= test_mous]
-    test_mous = mouses[test_mouse]
+    train_mouses = [mouses[i] for i in range(len(mouses)) if i!= test_mouse]
+    test_muisje = mouses[test_mouse]
     path = pathlib.Path('processed').parent
     for timestamp in ["-001h", "024h"]:
         for mouse in train_mouses:
@@ -35,7 +35,7 @@ def prep_data(test_mouse=0): #test mouse kan index 0-5 hebben
     Test_transversal_024h = []
 
     for timestamp in ["-001h", "024h"]:
-        mouse = test_mous
+        mouse = test_muisje
         path_ct = path / f"processed/{mouse}_{timestamp}_CT280.img"
         ct = nib.load(path_ct).get_fdata()
         for i in range(ct.shape[-1]):
