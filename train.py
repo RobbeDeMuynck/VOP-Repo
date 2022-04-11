@@ -1,8 +1,11 @@
 
+from tracemalloc import start
+from turtle import begin_fill
 import params
 import MiceData
 from UNETleaky import *
 import json
+import time
 
 ################################### DECLARING HYPERPARAMETERS  ##################################
 num_epochs = params.num_epochs
@@ -54,6 +57,7 @@ def TRAIN(input, target, val_input, val_target,
         }
 
     best_loss = np.inf
+    starttime = time.time()
     for epoch in range(1, num_epochs+1):  # we itereren meerdere malen over de data tot convergence?
         model.train()
         train_epoch_loss = 0
@@ -96,6 +100,7 @@ def TRAIN(input, target, val_input, val_target,
         loss_stats["val"].append(val_epoch_loss/len(val_loader))
         
         if loss_stats["val"][-1] < best_loss:
+            endtime = time.time()
             best_loss, epoch_no = loss_stats["val"][-1], epoch
             if save == True:
                 torch.save(model.state_dict(), 'MODELS/'+model_name+'.pth')
@@ -121,6 +126,7 @@ def TRAIN(input, target, val_input, val_target,
 
     # Dictionary with model details
     run = {
+        'train_time' : endtime-starttime,
         'num_epochs': num_epochs,
         'batch_size': batch_size,
         'learning_rate': learning_rate,
