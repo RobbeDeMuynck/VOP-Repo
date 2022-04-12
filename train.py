@@ -8,12 +8,12 @@ import json
 import time
 
 ################################### DECLARING HYPERPARAMETERS  ##################################
-num_epochs = params.num_epochs
-batch_size = params.batch_size
-learning_rate = params.learning_rate
-weight_decay = params.weight_decay
-patience = params.patience
-features = params.features
+# num_epochs = params.num_epochs
+# batch_size = params.batch_size
+# learning_rate = params.learning_rate
+# weight_decay = params.weight_decay
+# patience = params.patience
+# features = params.features
 
 ################################### LOADING DATA TRANSVERSAL  ###################################
 # input = MiceData.Train_coronal_001h

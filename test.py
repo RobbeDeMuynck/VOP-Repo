@@ -12,8 +12,8 @@ patience = params.patience
 features = params.features
 
 plotting = True
-input = MiceData.prep_data()[2]
-target = MiceData.prep_data()[3]
+input = MiceData.prep_data(test_mouse=1)[2]
+target = MiceData.prep_data(test_mouse=1)[3]
 #input = MiceData.Test_transversal_001h
 #target = MiceData.Test_transversal_024h
 # input = MiceData.Train_transversal_001h
@@ -23,7 +23,7 @@ target = MiceData.prep_data()[3]
 ############################# IMPORTING THE NEEDED FUNCTIONS  #############################
 
 ############################# LOADING THE MODEL  #############################
-model_path = "MODELS\BS=8;LR=0.001;WD=0.09;FT=4.pth"
+model_path = "MODELS/BS=8;LR=0.001;WD=0.09;FT=16;test_mouse=1.pth"
 model = UNet(features).to(device)
 model.load_state_dict(torch.load(model_path))
 
