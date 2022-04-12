@@ -12,8 +12,8 @@ patience = params.patience
 features = params.features
 
 plotting = True
-input = MiceData.Test_coronal_001h
-target = MiceData.Test_coronal_024h
+input = MiceData.prep_data()[2]
+target = MiceData.prep_data()[3]
 #input = MiceData.Test_transversal_001h
 #target = MiceData.Test_transversal_024h
 # input = MiceData.Train_transversal_001h
@@ -28,7 +28,6 @@ model = UNet(features).to(device)
 model.load_state_dict(torch.load(model_path))
 
 
-
 ############################# TESTING  #############################
 
 test_loader = DataLoader(
@@ -39,7 +38,6 @@ test_loader = DataLoader(
                 )
 model.eval()
 print('Starting with testing...')
-
 
 losses = []
 for i, (input_batch,target_batch) in enumerate(tqdm(test_loader)):
