@@ -480,7 +480,7 @@ class LieveMuizen():
             loss = loss_function(prediction_batch,target_batch) #vergelijk predicted na image met de echte na image
             losses.append(loss.item())
 
-            if plot == True and i%30 == 0:
+            if plot == True and i%1 == 0:
                 for j in range(self.batch_size):
                     fig = plt.subplots(figsize=(20,40))
                     img_pred = prediction_batch[j][0].cpu()
@@ -496,6 +496,7 @@ class LieveMuizen():
                     plt.imshow(img_pred.detach().numpy(),cmap='viridis')
                     plt.title('Model prediction')
                     plt.savefig(f'afbeeldingen/{j}_{self.model_name}.png')
+                    plt.close()
         av_loss = np.mean(np.array(losses))
         print(f'The average test loss is: {av_loss}')
         test_run = {'average_testloss':av_loss}
