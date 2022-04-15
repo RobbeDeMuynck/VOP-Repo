@@ -1,14 +1,13 @@
-from _UNET import *
+from _UNET import UNet
+import torch
+import torch.nn as nn
+import torchvision
 from torch.optim import Adam
-from torch.utils.data import Dataset, DataLoader
-from _data_loading import MiceDataset
 import numpy as np
 import tqdm
 from torch.autograd import Variable
-
-
-import json
 import time
+import json
 
 ################################### DECLARING HYPERPARAMETERS  ##################################
 # num_epochs = params.num_epochs
@@ -25,35 +24,16 @@ import time
 # val_target = MiceData.Test_coronal_024h
 
 ################################## TRAINING  ##################################
-device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
-torch.cuda.empty_cache()
-def TRAIN(input, target, val_input, val_target,
-        num_epochs, batch_size, learning_rate, weight_decay, patience, features, layers,
+def train(layers, features, device,
+        train_loader, val_loader,
+        num_epochs, batch_size, learning_rate=1e-3, weight_decay=0, patience=5,
         model_name='TEST', save=True):
-    model = UNet(ft=features, layers=layers).to(device)
-    optimizer = Adam(
-                    model.parameters(),
-                    lr=learning_rate,
-                    weight_decay=weight_decay
-                    )
-    train_loader = DataLoader(
-                    MiceDataset(input, target),
-                    batch_size=batch_size,
-                    shuffle=True,
-                    drop_last=True
-                    )
-    # test_loader = DataLoader(
-    #                 MuizenDataset(?, ?),
-    #                 batch_size=batch_size,
-    #                 shuffle=True,
-    #                 )
-    val_loader = DataLoader(
-                    MiceDataset(val_input, val_target),
-                    batch_size=batch_size,
-                    shuffle=True,
-                    drop_last=True
-                    )
-    # n_train = len(train_loader)
+
+    ### Declare network architecture ###
+    model = UNet(layers=layers, ft=features).to(device)
+    ### Declare loss function & optimizer ###
+    loss_function = nn.MSEloss()
+    optimizer = Adam(model.parameters(), lr=learning_rate, weight_decay=weight_decay)
 
     print('Starting with training...')
     loss_stats = {
@@ -63,13 +43,13 @@ def TRAIN(input, target, val_input, val_target,
 
     best_loss = np.inf
     starttime = time.time()
-    for epoch in range(1, num_epochs+1):  # we itereren meerdere malen over de data tot convergence?
+    for epoch in range(1, num_epochs+1):
         model.train()
         train_epoch_loss = 0
         print(f"Epoch: {epoch}/{num_epochs}")
-        for i, (input_batch, target_batch) in enumerate(tqdm(train_loader)): #wat is een handige manier om dit in te lezen?
+        for i, (input_batch, target_batch) in enumerate(tqdm(train_loader)):
             
-            if torch.cuda.is_available(): #steek de batch in de GPU
+            if torch.cuda.is_available(): # Put batch on GPU
                 input_batch = Variable(input_batch.cuda())
                 target_batch = Variable(target_batch.cuda())
             
@@ -78,7 +58,7 @@ def TRAIN(input, target, val_input, val_target,
             _, _, H, W = prediction_batch.shape
             target_batch = torchvision.transforms.CenterCrop([H,W])(target_batch)
             
-            loss = loss_function(prediction_batch, target_batch) #vergelijk predicted na image met de echte na image
+            loss = loss_function(prediction_batch, target_batch) # Compare prediction with target
             loss.backward()
             optimizer.step()
 
@@ -86,7 +66,7 @@ def TRAIN(input, target, val_input, val_target,
             
             input_batch = torchvision.transforms.CenterCrop([H,W])(input_batch)
         
-        # Prevent overfitting
+        ### Prevent overfitting ###
         with torch.no_grad():
             val_epoch_loss = 0
                 
@@ -101,6 +81,7 @@ def TRAIN(input, target, val_input, val_target,
                 val_loss = loss_function(val_pred, val_target_batch)
                 val_epoch_loss += val_loss.item()
         
+        # Store the batch-average MSE loss per epoch
         loss_stats["train"].append(train_epoch_loss/len(train_loader))
         loss_stats["val"].append(val_epoch_loss/len(val_loader))
         
@@ -126,22 +107,24 @@ def TRAIN(input, target, val_input, val_target,
             epoch_no = epoch
             print(f"Model trained succesfully and saved as: '{model_name}.pth'")
 
-    # print(f"""Training_losses = {loss_stats["train"]}
-    # Validation_losses = {loss_stats["val"]}""")
-
-    # Dictionary with model details
+    ### Dictionary with model details ###
     run = {
         'train_time' : endtime-starttime,
+        'layers': layers,
+        'features': features,
+
         'num_epochs': num_epochs,
         'batch_size': batch_size,
         'learning_rate': learning_rate,
         'weight_decay': weight_decay,
         'patience': patience,
-        'features': features,
+        
         'train_loss': loss_stats["train"],
         'val_loss': loss_stats["val"], 
         'num_epoch_convergence': epoch_no
     }
+    with open(f'runlogs/{model_name}.json', 'w+') as file:
+                    json.dump(run, file, indent=4)
     return run
 
 ##################################### Plotting MODEL losses  ##################################
