@@ -29,18 +29,21 @@ files = Path('runlogs').glob('*')
 #             sizes=(50, 350), alpha=.5, palette="crest", height=6)
 # plt.show()
 
-losses = []
-PAR = [(8, 0.001, 0.09, 4)]
-for file in files:
-    with open(file, "r") as RUN:
-        run = json.load(RUN)
-        params = run["batch_size"], run["learning_rate"], run["weight_decay"], run["features"]
-        train_loss = run["train_loss"]
-        val_loss = run["val_loss"]
-        # if params in PAR:
-        #     losses = train_loss, val_loss
-        #     print(run["num_epoch_convergence"])
-        losses = train_loss, val_loss
+# losses = []
+# PAR = [(8, 0.001, 0.09, 4)]
+# for file in files:
+#    with open(file, "r") as RUN:
+#        run = json.load(RUN)
+#        params = run["batch_size"], run["learning_rate"], run["weight_decay"], run["features"]
+#        train_loss = run["train_loss"]
+#        val_loss = run["val_loss"]
+#        # if params in PAR:
+#        #     losses = train_loss, val_loss
+#        #     print(run["num_epoch_convergence"])
+#        losses = train_loss, val_loss
+with open(Path('runlogs/TEST2.json'), 'r') as RUN:
+    run = json.load(RUN)
+    losses = run["train_loss"], run["val_loss"]
 
 n = len(losses)
 palette = sns.color_palette("mako_r", n)
