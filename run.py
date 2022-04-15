@@ -501,7 +501,7 @@ class LieveMuizen():
         print(f'The average test loss is: {av_loss}')
         test_run = {'average_testloss':av_loss}
         
-        with open(f'runlogs/{self.model_name}.json', 'w') as file:
+        with open(f'runlogs_testing/{self.model_name}.json', 'w') as file:
                     json.dump(test_run, file, indent=4)
         return av_loss
 
