@@ -29,12 +29,9 @@ class MiceDataset(Dataset):
             input = np.fliplr(input)
             target = np.fliplr(target)
         
-        input = torch.from_numpy(input.copy())
-        target = torch.from_numpy(target.copy())
-        input = input.unsqueeze(0)
-        target = target.unsqueeze(0)
-        
-        return input.float(), target.float()
+        input = torch.from_numpy(input.copy()).unsqueeze(0).float()
+        target = torch.from_numpy(target.copy()).unsqueeze(0).float()
+        return input, target
 
 ################################## GET PROCESSED DATA ##################################
 def get_data(plane='transverse', val_mouse=5): 
