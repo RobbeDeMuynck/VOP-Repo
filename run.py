@@ -285,7 +285,7 @@ class LieveMuizen():
                 mouse = test_muisje
                 path_ct = path / f"processed/{mouse}_{timestamp}_CT280.img"
                 ct = nib.load(path_ct).get_fdata()
-                for i in range(ct.shape[-1]):
+                for i in range(ct.shape[1]):
                     if timestamp == "-001h":
                         Test_sagittal_001h.append(ct[:,i,:])
                     else:
@@ -318,7 +318,7 @@ class LieveMuizen():
                 mouse = test_muisje
                 path_ct = path / f"processed/{mouse}_{timestamp}_CT280.img"
                 ct = nib.load(path_ct).get_fdata()
-                for i in range(ct.shape[-1]):
+                for i in range(ct.shape[0]):
                     if timestamp == "-001h":
                         Test_coronal_001h.append(ct[i,:,:])
                     else:
@@ -483,7 +483,7 @@ class LieveMuizen():
             loss = loss_function(prediction_batch,target_batch) #vergelijk predicted na image met de echte na image
             losses.append(loss.item())
 
-            if plot == True and i%40 == 0:
+            if plot == True and i%10 == 0:
                 for j in range(self.batch_size):
                     print('fig binnen batch')
                     fig = plt.subplots(figsize=(20,40))
