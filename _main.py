@@ -20,7 +20,7 @@ weight_decay = 0
 patience = 5
 
 ### Declare training & validation datasets ###
-input, target, val_input, val_target = get_data(plane='transverse', val_mouse=5)
+input, target, val_input, val_target = get_data(plane='transversal', val_mouse=5)
 train_loader = DataLoader(MiceDataset(input, target), batch_size=batch_size, shuffle=True, drop_last=True)
 val_loader = DataLoader(MiceDataset(val_input, val_target), batch_size=batch_size, shuffle=True, drop_last=True)
 

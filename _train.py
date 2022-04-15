@@ -4,7 +4,7 @@ import torch.nn as nn
 import torchvision
 from torch.optim import Adam
 import numpy as np
-import tqdm
+from tqdm import tqdm
 from torch.autograd import Variable
 import time
 import json
@@ -17,16 +17,12 @@ def train(layers, features, device,
         train_loader, val_loader,
         num_epochs, batch_size, learning_rate=1e-3, weight_decay=0, patience=5,
         model_name='TEST', save=True):
-        
-    ### Declare training & validation datasets ###
-    input, target, val_input, val_target = get_data(plane='transverse', val_mouse=5)
-    train_loader = DataLoader(MiceDataset(input, target), batch_size=batch_size, shuffle=True, drop_last=True)
-    val_loader = DataLoader(MiceDataset(val_input, val_target), batch_size=batch_size, shuffle=True, drop_last=True)
-
+    device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+    # torch.cuda.empty_cache()
     ### Declare network architecture ###
     model = UNet(layers=layers, ft=features).to(device)
     ### Declare loss function & optimizer ###
-    loss_function = nn.MSELoss()
+    loss_function = nn.MSELoss().to(device)
     optimizer = Adam(model.parameters(), lr=learning_rate, weight_decay=weight_decay)
 
     print('Starting with training...')
@@ -38,17 +34,18 @@ def train(layers, features, device,
     best_loss = np.inf
     starttime = time.time()
     for epoch in range(1, num_epochs+1):
-        model.train()
+        model.train().to(device)
         train_epoch_loss = 0
         print(f"Epoch: {epoch}/{num_epochs}")
         for input_batch, target_batch in tqdm(train_loader):
             
-            if torch.cuda.is_available(): # Put batch on GPU
-                input_batch = Variable(input_batch.cuda())
-                target_batch = Variable(target_batch.cuda())
-            
+            # Put batch on GPU
+            input_batch = input_batch.to(device)
+            target_batch = target_batch.to(device)
             optimizer.zero_grad()
-            prediction_batch = model(input_batch)
+            
+            prediction_batch = model(input_batch).to(device)
+            
             _, _, H, W = prediction_batch.shape
             target_batch = torchvision.transforms.CenterCrop([H,W])(target_batch)
             
@@ -64,7 +61,7 @@ def train(layers, features, device,
         with torch.no_grad():
             val_epoch_loss = 0
                 
-            model.eval()
+            model.eval().to(device)
             for val_input_batch, val_target_batch in val_loader:
                 val_input_batch = val_input_batch.to(device)
                 val_target_batch = val_target_batch.to(device)

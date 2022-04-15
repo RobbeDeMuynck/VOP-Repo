@@ -92,23 +92,24 @@ class UNet(nn.Module):
     def __init__(self, layers=4, ft=10):
         super().__init__()
         self.layers = layers
+        self.device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 
         ### Encoder ###
         self.encoders = []
-        self.encoders.append(encoder_block(1, ft))
+        self.encoders.append(encoder_block(1, ft).to(self.device))
         for i in range(1, layers):
-            self.encoders.append(encoder_block(2**(i-1)*ft, 2**(i)*ft))
+            self.encoders.append(encoder_block(2**(i-1)*ft, 2**(i)*ft).to(self.device))
 
         ### Bottleneck ###
-        self.bottleneck = res_block(2**(layers-1)*ft, 2**(layers)*ft)
+        self.bottleneck = res_block(2**(layers-1)*ft, 2**(layers)*ft).to(self.device)
         
         ### Decoder ###
         self.decoders = []
         for i in range(layers, 0, -1):
-            self.decoders.append(decoder_block(2**(i)*ft, 2**(i-1)*ft))
+            self.decoders.append(decoder_block(2**(i)*ft, 2**(i-1)*ft).to(self.device))
             
         ### Last layer: mapping to prediction ###
-        self.outputs = nn.Conv2d(ft, 1, kernel_size=1, padding=0)
+        self.outputs = nn.Conv2d(ft, 1, kernel_size=1, padding=0).to(self.device)
 
     def forward(self, inputs):
         ### Encoder ###

@@ -34,110 +34,109 @@ class MiceDataset(Dataset):
         return input, target
 
 ################################## GET PROCESSED DATA ##################################
-def get_data(plane='transverse', val_mouse=5): 
-        train_input, train_target = [], []
-        val_input, val_target = [], []
+def get_data(plane='transversal', val_mouse=5): 
+    train_input, train_target = [], []
+    val_input, val_target = [], []
 
-        mice = ["M03", "M04", "M05", "M06", "M07","M08"]
-        train_names = [mouse for i, mouse in enumerate(mice) if i!= val_mouse]
-        val_names = [mouse for i, mouse in enumerate(mice) if i == val_mouse]
+    mice = ["M03", "M04", "M05", "M06", "M07","M08"]
+    train_names = [mouse for i, mouse in enumerate(mice) if i!= val_mouse]
+    val_names = [mouse for i, mouse in enumerate(mice) if i == val_mouse]
 
-        path = pathlib.Path('processed').parent
-        for timestamp in ["-001h", "024h"]:
-            for mouse in train_names:
-                if timestamp == "-001h":
-                    path_ct = path / f"processed/{mouse}_{timestamp}_CT280.img"
-                    train_input.append(nib.load(path_ct).get_fdata())
-                else: 
-                    path_ct = path / f"processed/{mouse}_{timestamp}_CT280.img"
-                    train_target.append(nib.load(path_ct).get_fdata())
-            for mouse in val_names:
-                if timestamp == "-001h":
-                    path_ct = path / f"processed/{mouse}_{timestamp}_CT280.img"
-                    val_input.append(nib.load(path_ct).get_fdata())
-                else: 
-                    path_ct = path / f"processed/{mouse}_{timestamp}_CT280.img"
-                    val_target.append(nib.load(path_ct).get_fdata())
+    path = pathlib.Path('processed').parent
+    for timestamp in ["-001h", "024h"]:
+        for mouse in train_names:
+            if timestamp == "-001h":
+                path_ct = path / f"processed/{mouse}_{timestamp}_CT280.img"
+                train_input.append(nib.load(path_ct).get_fdata())
+            else: 
+                path_ct = path / f"processed/{mouse}_{timestamp}_CT280.img"
+                train_target.append(nib.load(path_ct).get_fdata())
+        for mouse in val_names:
+            if timestamp == "-001h":
+                path_ct = path / f"processed/{mouse}_{timestamp}_CT280.img"
+                val_input.append(nib.load(path_ct).get_fdata())
+            else: 
+                path_ct = path / f"processed/{mouse}_{timestamp}_CT280.img"
+                val_target.append(nib.load(path_ct).get_fdata())
 
-        ### Return transversal slices ###
-        
-        if plane == 'transverse':
+    ### Return transversal slices ###
+    if plane == 'transversal':
 
-            train_transversal_001h = []
-            train_transversal_024h = []
-            for mouse in train_input:
-                for i in range(mouse.shape[-1]):
-                    train_transversal_001h.append(mouse[:,:,i])
-            for mouse in train_target:
-                for i in range(mouse.shape[-1]):
-                    train_transversal_024h.append(mouse[:,:,i])
+        train_transversal_001h = []
+        train_transversal_024h = []
+        for mouse in train_input:
+            for i in range(mouse.shape[-1]):
+                train_transversal_001h.append(mouse[:,:,i])
+        for mouse in train_target:
+            for i in range(mouse.shape[-1]):
+                train_transversal_024h.append(mouse[:,:,i])
             
-            val_transversal_001h = []
-            val_transversal_024h = []
-            for mouse in val_input:
-                for i in range(mouse.shape[-1]):
-                    val_transversal_001h.append(mouse[:,:,i])
-            for mouse in val_target:
-                for i in range(mouse.shape[-1]):
-                    val_transversal_024h.append(mouse[:,:,i])
+        val_transversal_001h = []
+        val_transversal_024h = []
+        for mouse in val_input:
+            for i in range(mouse.shape[-1]):
+                val_transversal_001h.append(mouse[:,:,i])
+        for mouse in val_target:
+            for i in range(mouse.shape[-1]):
+                val_transversal_024h.append(mouse[:,:,i])
             
-            print('Data successfully initialized')
-            return train_transversal_001h, train_transversal_024h, val_transversal_001h, val_transversal_024h   
-            # train_transversal_001h (1210 slices)
-            # train_transversal_024h (1210 slices)
-            # val_transversal_001h  (242 slices)
-            # val_transversal_024h  (242 slices)
+        print('Data successfully initialized')
+        return train_transversal_001h, train_transversal_024h, val_transversal_001h, val_transversal_024h   
+        # train_transversal_001h (1210 slices)
+        # train_transversal_024h (1210 slices)
+        # val_transversal_001h  (242 slices)
+        # val_transversal_024h  (242 slices)
 
-        ### Loading sagittal slices ###
-        elif plane=='sagittal':
+    ### Loading sagittal slices ###
+    elif plane=='sagittal':
 
-            train_sagittal_001h = []
-            train_sagittal_024h = []
-            for mouse in train_input:
-                for i in range(mouse.shape[1]):
-                    train_sagittal_001h.append(mouse[:,i,:])
-            for mouse in train_target:
-                for i in range(mouse.shape[1]):
-                    train_sagittal_024h.append(mouse[:,i,:])
+        train_sagittal_001h = []
+        train_sagittal_024h = []
+        for mouse in train_input:
+            for i in range(mouse.shape[1]):
+                train_sagittal_001h.append(mouse[:,i,:])
+        for mouse in train_target:
+            for i in range(mouse.shape[1]):
+                train_sagittal_024h.append(mouse[:,i,:])
 
-            val_sagittal_001h = []
-            val_sagittal_024h = []
-            for mouse in val_input:
-                for i in range(mouse.shape[1]):
-                    val_sagittal_001h.append(mouse[:,i,:])
-            for mouse in val_target:
-                for i in range(mouse.shape[1]):
-                    val_sagittal_024h.append(mouse[:,i,:])
+        val_sagittal_001h = []
+        val_sagittal_024h = []
+        for mouse in val_input:
+            for i in range(mouse.shape[1]):
+                val_sagittal_001h.append(mouse[:,i,:])
+        for mouse in val_target:
+            for i in range(mouse.shape[1]):
+                 val_sagittal_024h.append(mouse[:,i,:])
 
-            print('Data successfully initialized')
-            return train_sagittal_001h, train_sagittal_024h, val_sagittal_001h, val_sagittal_024h
-            #Train_sagittal_001h (500 slices)
-            #Train_sagittal_024h (500 slices)
-            #val_sagittal_001h  (100 slices)
-            #val_sagittal_024h  (100 slices)
+        print('Data successfully initialized')
+        return train_sagittal_001h, train_sagittal_024h, val_sagittal_001h, val_sagittal_024h
+        #Train_sagittal_001h (500 slices)
+        #Train_sagittal_024h (500 slices)
+        #val_sagittal_001h  (100 slices)
+        #val_sagittal_024h  (100 slices)
 
-        ### Loading coronal slices ###
-        elif plane=='coronal':
+    ### Loading coronal slices ###
+    elif plane=='coronal':
 
-            train_coronal_001h = []
-            train_coronal_024h = []
-            for mouse in train_input:
-                for i in range(mouse.shape[0]):
-                    train_coronal_001h.append(mouse[i,:,:])
-            for mouse in train_target:
-                for i in range(mouse.shape[0]):
-                    train_coronal_024h.append(mouse[i,:,:])
+        train_coronal_001h = []
+        train_coronal_024h = []
+        for mouse in train_input:
+            for i in range(mouse.shape[0]):
+                train_coronal_001h.append(mouse[i,:,:])
+        for mouse in train_target:
+            for i in range(mouse.shape[0]):
+                train_coronal_024h.append(mouse[i,:,:])
 
-            val_coronal_001h = []
-            val_coronal_024h = []
-            for mouse in val_input:
-                for i in range(mouse.shape[0]):
-                    val_coronal_001h.append(mouse[i,:,:])
-            for mouse in train_target:
-                for i in range(mouse.shape[0]):
-                    val_coronal_024h.append(mouse[i,:,:])
-            print('Data successfully initialized')
-            return train_coronal_001h, train_coronal_024h, val_coronal_001h, val_coronal_024h
+        val_coronal_001h = []
+        val_coronal_024h = []
+        for mouse in val_input:
+            for i in range(mouse.shape[0]):
+                val_coronal_001h.append(mouse[i,:,:])
+        for mouse in train_target:
+            for i in range(mouse.shape[0]):
+                val_coronal_024h.append(mouse[i,:,:])
+        print('Data successfully initialized')
+        return train_coronal_001h, train_coronal_024h, val_coronal_001h, val_coronal_024h
 
-        print('Data loading failed')
-        return None
+    print('Data loading failed')
+    return None
