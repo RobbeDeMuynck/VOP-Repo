@@ -1,4 +1,4 @@
-from UNET import UNet
+from _UNET import UNet
 import torch
 from _load_data import get_data
 import matplotlib.pyplot as plt
@@ -9,22 +9,24 @@ import numpy as np
 import json
 
 ############################# LOADING THE MODEL  #############################
-model_path = "MODELS\TEST2.pth"
-model_path = "MODELS\BS=8;LR=0.001;WD=0.09;FT=4.pth"
-model_runlog = "runlogs\TEST2.json"
+model_path = "MODELS\TEST3.pth"
+# model_path = "MODELS\BS=8;LR=0.001;WD=0.09;FT=4.pth"
+model_runlog = "runlogs\TEST3.json"
 with open(model_runlog, 'r') as RUN:
     run = json.load(RUN)
     layers, features = run["layers"], run["features"]
 device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 device = torch.device('cpu')
 torch.cuda.empty_cache()
-model = UNet(4).to(device)
+model = UNet(layers, features).to(device)
 model.load_state_dict(torch.load(model_path))
 
-### LOAD IMAGE ###
+### LOAD IMAGES & NORMALIZE DATA ###
+def normalize(arr):
+    return (arr-np.mean(arr))/np.std(arr)
 input, target, val_input, val_target = get_data(plane='transversal', val_mouse=0)
-ind = 100
-slice_input, slice_target = val_input[ind], val_target[ind]
+ind = 120
+slice_input, slice_target = normalize(val_input[ind]), normalize(val_target[ind])
 slice_to_predict = torch.from_numpy(np.array(slice_input.copy())).unsqueeze(0).unsqueeze(0)
 
 ### APPLY MODEL ###

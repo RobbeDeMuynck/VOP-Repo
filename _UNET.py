@@ -92,44 +92,134 @@ class UNet(nn.Module):
     def __init__(self, layers=4, ft=10):
         super().__init__()
         self.layers = layers
-        self.device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 
-        ### Encoder ###
-        self.encoders = []
-        self.encoders.append(encoder_block(1, ft).to(self.device))
-        for i in range(1, layers):
-            self.encoders.append(encoder_block(2**(i-1)*ft, 2**(i)*ft).to(self.device))
+        if layers == 3:
+            ### Encoder ###
+            self.e1 = encoder_block(1, ft)
+            self.e2 = encoder_block(ft, 2*ft)
+            self.e3 = encoder_block(2*ft, 4*ft)
 
-        ### Bottleneck ###
-        self.bottleneck = res_block(2**(layers-1)*ft, 2**(layers)*ft).to(self.device)
-        
-        ### Decoder ###
-        self.decoders = []
-        for i in range(layers, 0, -1):
-            self.decoders.append(decoder_block(2**(i)*ft, 2**(i-1)*ft).to(self.device))
+            ### Bottleneck ###
+            self.b = res_block(4*ft, 8*ft)
             
-        ### Last layer: mapping to prediction ###
-        self.outputs = nn.Conv2d(ft, 1, kernel_size=1, padding=0).to(self.device)
+            ### Decoder ###
+            self.d1 = decoder_block(8*ft,4*ft)
+            self.d2 = decoder_block(4*ft,2*ft)
+            self.d3 = decoder_block(2*ft,ft)
+
+            ### Last layer: mapping to prediction ###
+            self.outputs = nn.Conv2d(ft, 1, kernel_size=1, padding=0)
+        elif layers == 4:
+            ### Encoder ###
+            self.e1 = encoder_block(1, ft)
+            self.e2 = encoder_block(ft, 2*ft)
+            self.e3 = encoder_block(2*ft, 4*ft)
+            self.e4 = encoder_block(4*ft, 8*ft)
+
+            ### Bottleneck ###
+            self.b = res_block(8*ft, 16*ft)
+            
+            ### Decoder ###
+            self.d1 = decoder_block(16*ft,8*ft)
+            self.d2 = decoder_block(8*ft,4*ft)
+            self.d3 = decoder_block(4*ft,2*ft)
+            self.d4 = decoder_block(2*ft,ft)
+
+            ### Last layer: mapping to prediction ###
+            self.outputs = nn.Conv2d(ft, 1, kernel_size=1, padding=0)
+        else: 
+            raise Exception("Cannot construct networ: 'layers' parameter can only be 3 or 4")
 
     def forward(self, inputs):
-        ### Encoder ###
-        # Store skip connections in dictionary for later use in decoder
-        skip_con = {}
-        down = inputs
-        for i, encoder in enumerate(self.encoders):
-            skip_con[f'{i}'], down = encoder(down)
+        if self.layers == 3:
+            ### Encoder ###
+            # Store skip connections in dictionary for later use in decoder
+            s1, p1 = self.e1(inputs)
+            s2, p2 = self.e2(p1)
+            s3, p3 = self.e3(p2)
 
-        ### Bottleneck ###
-        bottleneck = self.bottleneck(down)
+            ### Bottleneck ###
+            b = self.b(p3)
 
-        ### Decoder ###
-        up = bottleneck
-        for i, decoder in enumerate(self.decoders):
-            up = decoder(up, skip_con[f'{self.layers-1-i}'])
+            ### Decoder ###
+            d1 = self.d1(b, s3)
+            d2 = self.d2(d1, s2)
+            d3 = self.d3(d2, s1)
 
-        ### Last layer: mapping to prediction ###
-        outputs = self.outputs(up)
-        return outputs
+            ### Last layer: mapping to prediction ###
+            outputs = self.outputs(d3)
+            return outputs
+
+        elif self.layers == 4:
+            ### Encoder ###
+            # Store skip connections in dictionary for later use in decoder
+            s1, p1 = self.e1(inputs)
+            s2, p2 = self.e2(p1)
+            s3, p3 = self.e3(p2)
+            s4, p4 = self.e4(p3)
+
+            ### Bottleneck ###
+            b = self.b(p4)
+
+            ### Decoder ###
+            d1 = self.d1(b, s4)
+            d2 = self.d2(d1, s3)
+            d3 = self.d3(d2, s2)
+            d4 = self.d4(d3, s1)
+
+            ### Last layer: mapping to prediction ###
+            outputs = self.outputs(d4)
+            return outputs
+        
+        
+
+# class UNet(nn.Module):
+#     """A UNet neural network is constructed by combining its subblocks.
+#     The network structure is initialized by declaring the following parameters:
+#     -- ft: (int) number of starting features: number of channels of the first layer
+#     -- layers: (int) number of encoding operations in the network"""
+
+#     def __init__(self, layers=4, ft=10):
+#         super().__init__()
+#         self.layers = layers
+#         self.device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+
+#         ### Encoder ###
+#         self.encoders = []
+#         self.encoders.append(encoder_block(1, ft).to(self.device))
+#         for i in range(1, layers):
+#             self.encoders.append(encoder_block(2**(i-1)*ft, 2**(i)*ft).to(self.device))
+
+#         ### Bottleneck ###
+#         self.bottleneck = res_block(2**(layers-1)*ft, 2**(layers)*ft).to(self.device)
+        
+#         ### Decoder ###
+#         self.decoders = []
+#         for i in range(layers, 0, -1):
+#             self.decoders.append(decoder_block(2**(i)*ft, 2**(i-1)*ft).to(self.device))
+            
+#         ### Last layer: mapping to prediction ###
+#         self.outputs = nn.Conv2d(ft, 1, kernel_size=1, padding=0).to(self.device)
+
+#     def forward(self, inputs):
+#         ### Encoder ###
+#         # Store skip connections in dictionary for later use in decoder
+#         skip_con = {}
+#         down = inputs
+#         for i, encoder in enumerate(self.encoders):
+#             skip_con[f'{i}'], down = encoder(down)
+
+#         ### Bottleneck ###
+#         bottleneck = self.bottleneck(down)
+
+#         ### Decoder ###
+#         up = bottleneck
+#         for i, decoder in enumerate(self.decoders):
+#             up = decoder(up, skip_con[f'{self.layers-1-i}'])
+
+#         ### Last layer: mapping to prediction ###
+#         outputs = self.outputs(up)
+#         return outputs
 
 # import torch
 # import numpy as np
