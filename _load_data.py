@@ -29,18 +29,21 @@ class MiceDataset(Dataset):
             input = np.fliplr(input)
             target = np.fliplr(target)
         
-        input = torch.from_numpy(input.copy()).unsqueeze(0).float()
-        target = torch.from_numpy(target.copy()).unsqueeze(0).float()
-        return input, target
+        input = torch.from_numpy(input.copy())
+        target = torch.from_numpy(target.copy())
+        input = input.unsqueeze(0)
+        target = target.unsqueeze(0)
+        
+        return input.float(), target.float()
 
 ################################## GET PROCESSED DATA ##################################
-def get_data(plane='transversal', val_mouse=6): 
+def get_data(plane='transverse', val_mouse=5): 
         train_input, train_target = [], []
         val_input, val_target = [], []
 
         mice = ["M03", "M04", "M05", "M06", "M07","M08"]
         train_names = [mouse for i, mouse in enumerate(mice) if i!= val_mouse]
-        val_names = [mice[val_mouse]]
+        val_names = [mouse for i, mouse in enumerate(mice) if i == val_mouse]
 
         path = pathlib.Path('processed').parent
         for timestamp in ["-001h", "024h"]:
@@ -60,6 +63,7 @@ def get_data(plane='transversal', val_mouse=6):
                     val_target.append(nib.load(path_ct).get_fdata())
 
         ### Return transversal slices ###
+        
         if plane == 'transverse':
 
             train_transversal_001h = []
@@ -70,7 +74,7 @@ def get_data(plane='transversal', val_mouse=6):
             for mouse in train_target:
                 for i in range(mouse.shape[-1]):
                     train_transversal_024h.append(mouse[:,:,i])
-
+            
             val_transversal_001h = []
             val_transversal_024h = []
             for mouse in val_input:

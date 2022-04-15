@@ -2,27 +2,6 @@ import torch
 import torch.nn as nn 
 import torchvision
 
-# import torch
-# import numpy as np
-# import torch.nn as nn
-# import torchvision
-# import matplotlib.pyplot as plt
-# from tqdm import tqdm
-# from torch.optim import Adam
-# from torch.autograd import Variable
-# from torchvision.transforms import transforms
-# # import pathlib
-# # import nibabel as nib
-# from torch.utils.data import Dataset, DataLoader
-# from torch.utils.tensorboard import SummaryWriter
-# import time
-# import seaborn as sns
-# import params
-
-# device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
-# torch.cuda.empty_cache()
-
-
 ##################################### DEFINING BUILDING BLOCKS  ##################################
 class conv_block(nn.Module):
     """2 times:  3x3 convolution, followed by batch normalization and a ReLu."""
@@ -150,3 +129,23 @@ class UNet(nn.Module):
         ### Last layer: mapping to prediction ###
         outputs = self.outputs(up)
         return outputs
+
+# import torch
+# import numpy as np
+# import torch.nn as nn
+# import torchvision
+# import matplotlib.pyplot as plt
+# from tqdm import tqdm
+# from torch.optim import Adam
+# from torch.autograd import Variable
+# from torchvision.transforms import transforms
+# # import pathlib
+# # import nibabel as nib
+# from torch.utils.data import Dataset, DataLoader
+# from torch.utils.tensorboard import SummaryWriter
+# import time
+# import seaborn as sns
+# import params
+
+# device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+# torch.cuda.empty_cache()

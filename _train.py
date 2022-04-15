@@ -9,30 +9,24 @@ from torch.autograd import Variable
 import time
 import json
 
-################################### DECLARING HYPERPARAMETERS  ##################################
-# num_epochs = params.num_epochs
-# batch_size = params.batch_size
-# learning_rate = params.learning_rate
-# weight_decay = params.weight_decay
-# patience = params.patience
-# features = params.features
-
-################################### LOADING DATA TRANSVERSAL  ###################################
-# input = MiceData.Train_coronal_001h
-# target = MiceData.Train_coronal_024h
-# val_input = MiceData.Test_coronal_001h
-# val_target = MiceData.Test_coronal_024h
+from _load_data import MiceDataset, get_data
+from torch.utils.data import DataLoader
 
 ################################## TRAINING  ##################################
 def train(layers, features, device,
         train_loader, val_loader,
         num_epochs, batch_size, learning_rate=1e-3, weight_decay=0, patience=5,
         model_name='TEST', save=True):
+        
+    ### Declare training & validation datasets ###
+    input, target, val_input, val_target = get_data(plane='transverse', val_mouse=5)
+    train_loader = DataLoader(MiceDataset(input, target), batch_size=batch_size, shuffle=True, drop_last=True)
+    val_loader = DataLoader(MiceDataset(val_input, val_target), batch_size=batch_size, shuffle=True, drop_last=True)
 
     ### Declare network architecture ###
     model = UNet(layers=layers, ft=features).to(device)
     ### Declare loss function & optimizer ###
-    loss_function = nn.MSEloss()
+    loss_function = nn.MSELoss()
     optimizer = Adam(model.parameters(), lr=learning_rate, weight_decay=weight_decay)
 
     print('Starting with training...')
@@ -47,7 +41,7 @@ def train(layers, features, device,
         model.train()
         train_epoch_loss = 0
         print(f"Epoch: {epoch}/{num_epochs}")
-        for i, (input_batch, target_batch) in enumerate(tqdm(train_loader)):
+        for input_batch, target_batch in tqdm(train_loader):
             
             if torch.cuda.is_available(): # Put batch on GPU
                 input_batch = Variable(input_batch.cuda())
