@@ -17,8 +17,7 @@ def train(layers, features, device,
         train_loader, val_loader,
         num_epochs, batch_size, learning_rate=1e-3, weight_decay=0, patience=5,
         model_name='TEST', save=True):
-    device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
-    # torch.cuda.empty_cache()
+
     ### Declare network architecture ###
     model = UNet(layers=layers, ft=features).to(device)
     ### Declare loss function & optimizer ###
@@ -30,7 +29,6 @@ def train(layers, features, device,
         'train': [],
         'val': []
         }
-
     best_loss = np.inf
     starttime = time.time()
     for epoch in range(1, num_epochs+1):
