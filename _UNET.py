@@ -118,6 +118,7 @@ class UNet(nn.Module):
         down = inputs
         for i, encoder in enumerate(self.encoders):
             skip_con[f'{i}'], down = encoder(down)
+            print('Encoded')
 
         ### Bottleneck ###
         bottleneck = self.bottleneck(down)

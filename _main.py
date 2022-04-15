@@ -29,7 +29,7 @@ features = 10
 layers = 3
 
 ### Train model ###
-train(features, layers, device,
+train(layers, features, device,
         train_loader, val_loader,
         num_epochs, batch_size, learning_rate=1e-3, weight_decay=0, patience=5,
         model_name='TEST', save=True)
