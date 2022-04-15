@@ -1,9 +1,12 @@
+from _UNET import *
+from torch.optim import Adam
+from torch.utils.data import Dataset, DataLoader
+from _data_loading import MiceDataset
+import numpy as np
+import tqdm
+from torch.autograd import Variable
 
-from tracemalloc import start
-from turtle import begin_fill
-import params
-import MiceData
-from #UNET import *
+
 import json
 import time
 
@@ -22,17 +25,19 @@ import time
 # val_target = MiceData.Test_coronal_024h
 
 ################################## TRAINING  ##################################
+device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+torch.cuda.empty_cache()
 def TRAIN(input, target, val_input, val_target,
-        num_epochs, batch_size, learning_rate, weight_decay, patience, features,
+        num_epochs, batch_size, learning_rate, weight_decay, patience, features, layers,
         model_name='TEST', save=True):
-    model = UNet(features).to(device)
+    model = UNet(ft=features, layers=layers).to(device)
     optimizer = Adam(
                     model.parameters(),
                     lr=learning_rate,
                     weight_decay=weight_decay
                     )
     train_loader = DataLoader(
-                    MuizenDataset(input, target),
+                    MiceDataset(input, target),
                     batch_size=batch_size,
                     shuffle=True,
                     drop_last=True
@@ -43,7 +48,7 @@ def TRAIN(input, target, val_input, val_target,
     #                 shuffle=True,
     #                 )
     val_loader = DataLoader(
-                    MuizenDataset(val_input, val_target),
+                    MiceDataset(val_input, val_target),
                     batch_size=batch_size,
                     shuffle=True,
                     drop_last=True
