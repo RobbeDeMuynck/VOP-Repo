@@ -483,7 +483,7 @@ class LieveMuizen():
             loss = loss_function(prediction_batch,target_batch) #vergelijk predicted na image met de echte na image
             losses.append(loss.item())
 
-            if plot == True and i%1 == 0:
+            if plot == True and i%40 == 0:
                 for j in range(self.batch_size):
                     print('fig binnen batch')
                     fig = plt.subplots(figsize=(20,40))
