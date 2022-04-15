@@ -445,6 +445,9 @@ class LieveMuizen():
             'num_epoch_convergence': epoch_no
         }
 
+        plt.plot(loss_stats['train'])
+        plt.show()
+
         with open(f'runlogs/{self.model_name}.json', 'w+') as file:
                     json.dump(run, file, indent=4)
         print(f'Model successfully trained and saved to {self.model_path}.pth')
@@ -468,7 +471,7 @@ class LieveMuizen():
         for i, (input_batch,target_batch) in enumerate(tqdm(test_loader)):
             #input_batch = input_batch.view(batch_size,1,121,242)
             #target_batch = target_batch.view(batch_size,1,121,242)
-            
+            print('batch_testen')
             if torch.cuda.is_available():
                 input_batch=Variable(input_batch.cuda())
                 target_batch=Variable(target_batch.cuda())
@@ -482,6 +485,7 @@ class LieveMuizen():
 
             if plot == True and i%1 == 0:
                 for j in range(self.batch_size):
+                    print('fig binnen batch')
                     fig = plt.subplots(figsize=(20,40))
                     img_pred = prediction_batch[j][0].cpu()
                     img_input = input_batch[j][0].cpu()
@@ -495,7 +499,7 @@ class LieveMuizen():
                     plt.subplot(3,1,3)
                     plt.imshow(img_pred.detach().numpy(),cmap='viridis')
                     plt.title('Model prediction')
-                    plt.savefig(f'afbeeldingen/{j}_{self.model_name}.png')
+                    plt.savefig(f'afbeeldingen/batch_{i}_afbeelding{j}_{self.model_name}.png')
                     plt.close()
         av_loss = np.mean(np.array(losses))
         print(f'The average test loss is: {av_loss}')
