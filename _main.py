@@ -10,7 +10,7 @@ torch.cuda.empty_cache()
 ### Declare training hyperparameters ###
 num_epochs = 120
 batch_size = 4
-learning_rate = 1e-4
+learning_rate = 1e-3
 weight_decay = 0.9
 patience = 5
 
