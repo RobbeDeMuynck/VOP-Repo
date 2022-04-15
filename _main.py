@@ -3,11 +3,6 @@ import torch
 from torch.utils.data import DataLoader
 from _train import train
 
-from torch.optim import Adam
-from torch.autograd import Variable
-from torchvision.transforms import transforms
-from torch.utils.data import Dataset, DataLoader
-
 ### Declare device ###
 device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 torch.cuda.empty_cache()
@@ -20,7 +15,7 @@ weight_decay = 0.9
 patience = 5
 
 ### Declare training & validation datasets ###
-input, target, val_input, val_target = get_data(plane='sagittal', val_mouse=5)
+input, target, val_input, val_target = get_data(plane='transversal', val_mouse=0)
 train_loader = DataLoader(MiceDataset(input, target), batch_size=batch_size, shuffle=True, drop_last=True)
 val_loader = DataLoader(MiceDataset(val_input, val_target), batch_size=batch_size, shuffle=True, drop_last=True)
 
@@ -31,5 +26,5 @@ layers = 4
 ### Train model ###
 train(layers, features, device,
         train_loader, val_loader,
-        num_epochs, batch_size, learning_rate=1e-3, weight_decay=0, patience=5,
+        num_epochs, batch_size, learning_rate=learning_rate, weight_decay=weight_decay, patience=5,
         model_name='TEST2', save=True)
