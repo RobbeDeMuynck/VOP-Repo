@@ -10,24 +10,24 @@ from pathlib import Path
 
 files = Path('runlogs').glob('*')
 
-# cols = ["Batch size","Learning rate","Weight decay","Starting features","Minimum validation loss","Epochs trained"]
-# vals = {col: [] for col in cols}
-# for file in files:
-#     with open(file, "r") as RUN:
-#         run = json.load(RUN)
-#         vals["Batch size"].append(run["batch_size"])
-#         vals["Learning rate"].append(run["learning_rate"])
-#         vals["Weight decay"].append(["weight_decay"])
-#         vals['Starting features'].append(run["features"])
-#         vals["Minimum validation loss"].append(min(run["val_loss"]))
-#         vals["Epochs trained"].append(run["num_epoch_convergence"])
-# 
-# Data = pd.DataFrame(data=vals,columns=cols)
-# print(Data.head())
-# sns.relplot(data=Data, x="Epochs trained", y="Minimum validation loss", 
-#             hue="Learning rate", style = "Starting features", size="Batch size",
-#             sizes=(50, 350), alpha=.5, palette="crest", height=6)
-# plt.show()
+cols = ["Batch size","Learning rate","Weight decay","Starting features","Minimum validation loss","Epochs trained"]
+vals = {col: [] for col in cols}
+for file in files:
+     with open(file, "r") as RUN:
+         run = json.load(RUN)
+         vals["Batch size"].append(run["batch_size"])
+         vals["Learning rate"].append(run["learning_rate"])
+         vals["Weight decay"].append(["weight_decay"])
+         vals['Starting features'].append(run["features"])
+         vals["Minimum validation loss"].append(min(run["val_loss"]))
+         vals["Epochs trained"].append(run["num_epoch_convergence"])
+ 
+Data = pd.DataFrame(data=vals,columns=cols)
+print(Data.head())
+sns.relplot(data=Data, x="Epochs trained", y="Minimum validation loss", 
+            hue="Learning rate", style = "Starting features", size="Batch size",
+            sizes=(50, 350), alpha=.5, palette="crest", height=6)
+plt.show()
 
 # losses = []
 # PAR = [(8, 0.001, 0.09, 4)]
