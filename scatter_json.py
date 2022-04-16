@@ -10,22 +10,30 @@ from pathlib import Path
 
 files = Path('runlogs').glob('*')
 
-cols = ["Batch size","Learning rate","Weight decay","Starting features","Minimum validation loss","Epochs trained"]
+cols = ["Layers","Starting features","Batch size","Learning rate","Weight decay","Minimum validation loss","Epochs trained","Training time [mins]"]
 vals = {col: [] for col in cols}
 for file in files:
-     with open(file, "r") as RUN:
-         run = json.load(RUN)
-         vals["Batch size"].append(run["batch_size"])
-         vals["Learning rate"].append(run["learning_rate"])
-         vals["Weight decay"].append(["weight_decay"])
-         vals['Starting features'].append(run["features"])
-         vals["Minimum validation loss"].append(min(run["val_loss"]))
-         vals["Epochs trained"].append(run["num_epoch_convergence"])
+    with open(file, "r") as RUN:
+        run = json.load(RUN)
+        if min(run["val_loss"]) < 0.025:
+            vals["Layers"].append(run["layers"])
+            vals['Starting features'].append(run["features"])
+
+            vals["Batch size"].append(run["batch_size"])
+            vals["Learning rate"].append(run["learning_rate"])
+            vals["Weight decay"].append(["weight_decay"])
+            
+            vals["Minimum validation loss"].append(min(run["val_loss"]))
+            vals["Epochs trained"].append(run["num_epoch_convergence"])
+            vals["Training time [mins]"].append(run["train_time"]/60)
+        else:
+            print(run["layers"], run["features"], run["batch_size"], run["learning_rate"], run["weight_decay"])
  
 Data = pd.DataFrame(data=vals,columns=cols)
+Data.head
 print(Data.head())
 sns.relplot(data=Data, x="Epochs trained", y="Minimum validation loss", 
-            hue="Learning rate", style = "Starting features", size="Batch size",
+            hue="Learning rate", style = "Starting features", size="Batch size", col="Layers",
             sizes=(50, 350), alpha=.5, palette="crest", height=6)
 plt.show()
 
@@ -41,7 +49,8 @@ plt.show()
 #        #     losses = train_loss, val_loss
 #        #     print(run["num_epoch_convergence"])
 #        losses = train_loss, val_loss
-with open(Path('runlogs/TEST3.json'), 'r') as RUN:
+
+with open(Path('runlogs/LYRS=4;FT=12;BS=12;LR=0.001;WD=0.json'), 'r') as RUN:
     run = json.load(RUN)
     losses = run["train_loss"], run["val_loss"]
 
