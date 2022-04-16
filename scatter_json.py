@@ -32,7 +32,7 @@ for file in files:
 Data = pd.DataFrame(data=vals,columns=cols)
 Data.head
 print(Data.head())
-sns.relplot(data=Data, x="Epochs trained", y="Minimum validation loss", 
+sns.relplot(data=Data, x="Training time [mins]", y="Minimum validation loss", 
             hue="Learning rate", style = "Starting features", size="Batch size", col="Layers",
             sizes=(50, 350), alpha=.5, palette="crest", height=6)
 plt.show()
