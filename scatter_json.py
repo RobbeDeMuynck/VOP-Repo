@@ -41,7 +41,7 @@ files = Path('runlogs').glob('*')
 #        #     losses = train_loss, val_loss
 #        #     print(run["num_epoch_convergence"])
 #        losses = train_loss, val_loss
-with open(Path('runlogs/TEST2.json'), 'r') as RUN:
+with open(Path('runlogs/TEST3.json'), 'r') as RUN:
     run = json.load(RUN)
     losses = run["train_loss"], run["val_loss"]
 
