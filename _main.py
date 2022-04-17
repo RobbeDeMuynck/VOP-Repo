@@ -9,14 +9,14 @@ torch.cuda.empty_cache()
 
 ### Declare training hyperparameters ###
 num_epochs = 300
-batch_size = [4] # [4, 8, 12]
+batch_size = [12] # [4, 8, 12]
 learning_rate = [1e-3] # [1e-2, 5e-3, 1e-3, 1e-4, 1e-5]
 weight_decay = [0] # [0, 1e-2, 1e-4]
 patience = 5
 
 ### Declare network architecture ###
-layers = [3] # [3, 4]
-features = [16] # [4, 8, 12, 16]
+layers = [4] # [3, 4]
+features = [4] # [4, 8, 12, 16]
 
 repeats = 10
 ### Train model ###
