@@ -148,7 +148,7 @@ class UNet(nn.Module):
 
             ### Last layer: mapping to prediction ###
             outputs = self.outputs(d3)
-            return outputs
+            return outputs,s1,p1,s2,p2,s3,p3,b,d1,d2,d3
 
         elif self.layers == 4:
             ### Encoder ###
@@ -169,7 +169,7 @@ class UNet(nn.Module):
 
             ### Last layer: mapping to prediction ###
             outputs = self.outputs(d4)
-            return outputs
+            return outputs,s1,p1,s2,p2,s3,p3,s4,p4,b,d1,d2,d3,d4
         
         
 
