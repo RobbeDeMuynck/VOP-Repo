@@ -9,9 +9,9 @@ import numpy as np
 import json
 
 ############################# LOADING THE MODEL  #############################
-model_path = "MODELS\LYRS=4;FT=12;BS=12;LR=0.001;WD=0.pth"
+model_path = "MODELS\LYRS=3;FT=12;BS=4;LR=0.005;WD=0.pth"
 # model_path = "MODELS\BS=8;LR=0.001;WD=0.09;FT=4.pth"
-model_runlog = "runlogs\LYRS=4;FT=12;BS=12;LR=0.001;WD=0.json"
+model_runlog = "runlogs\LYRS=3;FT=12;BS=4;LR=0.005;WD=0.json"
 with open(model_runlog, 'r') as RUN:
     run = json.load(RUN)
     layers, features = run["layers"], run["features"]
@@ -24,8 +24,8 @@ model.load_state_dict(torch.load(model_path))
 ### LOAD IMAGES & NORMALIZE DATA ###
 def normalize(arr):
     return (arr-np.mean(arr))/np.std(arr)
-input, target, val_input, val_target = get_data(plane='sagittal', val_mouse=0)
-ind = 50
+input, target, val_input, val_target = get_data(plane='transversal', val_mouse=5)
+ind = 117
 slice_input, slice_target = normalize(val_input[ind]), normalize(val_target[ind])
 slice_to_predict = torch.from_numpy(np.array(slice_input.copy())).unsqueeze(0).unsqueeze(0)
 
