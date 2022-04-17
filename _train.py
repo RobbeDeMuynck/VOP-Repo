@@ -42,7 +42,7 @@ def train(layers, features, device,
             target_batch = target_batch.to(device)
             optimizer.zero_grad()
             
-            prediction_batch = model(input_batch).to(device)
+            prediction_batch = model(input_batch)[0].to(device)
             
             _, _, H, W = prediction_batch.shape
             target_batch = torchvision.transforms.CenterCrop([H,W])(target_batch)
