@@ -12,7 +12,7 @@ for file in files:
     with open(file, "r") as RUN:
         run = json.load(RUN)
         ### Select cases using 'if'-statement ###
-        if min(run["val_loss"]) < 0.006 and run["train_time"]/60 < 8:
+        if min(run["val_loss"]) < 0.006 and run["train_time"]/60 < 8 and run["learning_rate"] >= 0.001:
             vals["Layers"].append(run["layers"])
             vals['Starting features'].append(run["features"])
 
