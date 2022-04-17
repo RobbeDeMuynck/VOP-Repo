@@ -28,10 +28,11 @@ for file in files:
  
 Data = pd.DataFrame(data=vals,columns=cols)
 
+
 sns.set_theme(style="white")
 sns.relplot(data=Data, x="Training time [mins]", y="Minimum validation loss", 
             hue="Learning rate", style = "Starting features", size="Batch size", col="Layers",
-            sizes=(50, 350), alpha=.75, palette="colorblind", height=6)
+            sizes=(50, 350), alpha=.75, palette="colorblind", height=6).set(xlim=(0, 2),ylim=(0.0025,0.006))
 plt.show()
 
 # sns.lineplot(data=Data, y="Training", palette=palette)
