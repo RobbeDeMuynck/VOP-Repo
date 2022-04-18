@@ -3,15 +3,19 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import json
 from pathlib import Path
+import numpy as np
 
-files = Path('runlogs_repeat').glob('*')
+files = Path('runlogs').glob('*')
 
 cols = ["Layers","Starting features","Batch size","Learning rate","Weight decay","Minimum validation loss","Epochs trained","Training time [mins]"]
 vals = {col: [] for col in cols}
+
+train_time = []
 for file in files:
     with open(file, "r") as RUN:
         run = json.load(RUN)
         ### Select cases using 'if'-statement ###
+        train_time.append(run["train_time"])
         if min(run["val_loss"]) < 0.006 and run["train_time"]/60 < 8 and run["learning_rate"] >= 0.001:
             vals["Layers"].append(run["layers"])
             vals['Starting features'].append(run["features"])
@@ -28,6 +32,10 @@ for file in files:
  
 Data = pd.DataFrame(data=vals,columns=cols)
 
+print(f"""
+Number of networks trained:\t{len(train_time)}
+Total training time [mins]:\t{sum(train_time)/60} 
+Average training time:\t{np.mean(train_time)/60}""")
 
 sns.set_theme(style="white")
 sns.relplot(data=Data, x="Training time [mins]", y="Minimum validation loss", 
