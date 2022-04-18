@@ -18,6 +18,14 @@ from torchsummary import summary
 model_path = "MODELS\LYRS=4;FT=12;BS=4;LR=0.005;WD=0.pth"
 # model_path = "MODELS\BS=8;LR=0.001;WD=0.09;FT=4.pth"
 model_runlog = "runlogs\LYRS=4;FT=12;BS=4;LR=0.005;WD=0.json"
+
+### plots presentation ###
+good = 3, 16, 4, 0.001
+bad = 4, 4, 12, 1e-5 #LYRS=4;FT=4;BS=12;LR=1e-05;WD=0
+
+model_path = "MODELS\LYRS={};FT={};BS={};LR={};WD=0".format(*good) + ".pth"
+model_runlog = "runlogs\LYRS={};FT={};BS={};LR={};WD=0".format(*good) + ".json"
+
 with open(model_runlog, 'r') as RUN:
     run = json.load(RUN)
     layers, features = run["layers"], run["features"]
