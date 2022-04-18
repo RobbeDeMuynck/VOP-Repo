@@ -36,5 +36,5 @@ for LYRS in layers:
                                                         model_name += f';RUN={i}'
                                                 train(LYRS, FT, device,
                                                         train_loader, val_loader,
-                                                        num_epochs, BS, learning_rate=LR, weight_decay=WD, patience=5,
+                                                        num_epochs, BS, learning_rate=LR, weight_decay=WD, patience=patience,
                                                         model_name=model_name, save=True)
