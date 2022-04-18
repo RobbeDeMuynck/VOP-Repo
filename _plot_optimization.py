@@ -27,6 +27,11 @@ for file in files:
             vals["Minimum validation loss"].append(min(run["val_loss"]))
             vals["Epochs trained"].append(run["num_epoch_convergence"])
             vals["Training time [mins]"].append(run["train_time"]/60)
+
+            ### PLOT TUNING REPEAT
+            # if 'RUN' not in file.name:
+            #     vals["Minimum validation loss"][-1] += 1
+
         else:
             print(run["layers"], run["features"], run["batch_size"], run["learning_rate"], run["weight_decay"])
  
@@ -40,7 +45,9 @@ Average training time:\t{np.mean(train_time)/60}""")
 sns.set_theme(style="white", font_scale = 1.25)
 sns.relplot(data=Data, x="Training time [mins]", y="Minimum validation loss", 
             hue="Learning rate", style = "Starting features", size="Batch size", col="Layers",
-            sizes=(50, 350), alpha=.75, palette="colorblind", height=6)# .set(xlim=(0, 2),ylim=(0.0025,0.006))
+            sizes=(50, 350), alpha=.75, palette="colorblind", height=6).set(ylabel="Validation MSE loss (batch-average)").set(xlim=(0, 2.2),ylim=(0.0025,0.0055), ylabel="Validation MSE loss (batch-average)")
+
+plt.savefig("IMAGES/TUNING3.png", dpi=200)
 plt.show()
 
 # sns.lineplot(data=Data, y="Training", palette=palette)
