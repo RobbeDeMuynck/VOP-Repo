@@ -15,9 +15,9 @@ from torchvision.ops.feature_pyramid_network import FeaturePyramidNetwork
 from torchsummary import summary
 
 ############################# LOADING THE MODEL  #############################
-model_path = "MODELS\LYRS=3;FT=12;BS=4;LR=0.005;WD=0.pth"
+model_path = "MODELS\LYRS=4;FT=12;BS=4;LR=0.005;WD=0.pth"
 # model_path = "MODELS\BS=8;LR=0.001;WD=0.09;FT=4.pth"
-model_runlog = "runlogs\LYRS=3;FT=12;BS=4;LR=0.005;WD=0.json"
+model_runlog = "runlogs\LYRS=4;FT=12;BS=4;LR=0.005;WD=0.json"
 with open(model_runlog, 'r') as RUN:
     run = json.load(RUN)
     layers, features = run["layers"], run["features"]
