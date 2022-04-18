@@ -89,7 +89,7 @@ class UNet(nn.Module):
     -- ft: (int) number of starting features: number of channels of the first layer
     -- layers: (int) number of encoding operations in the network"""
 
-    def __init__(self, layers=4, ft=10):
+    def __init__(self, layers=3, ft=12):
         super().__init__()
         self.layers = layers
 
