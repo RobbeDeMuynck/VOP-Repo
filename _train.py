@@ -16,7 +16,7 @@ from torch.utils.data import DataLoader
 def train(layers, features, device,
         train_loader, val_loader,
         num_epochs, batch_size, learning_rate=1e-3, weight_decay=0, patience=5,
-        model_name='TEST', save=True):
+        model_name='TEST', log_folder='runlogs', save=True):
 
     ### Declare network architecture ###
     model = UNet(layers=layers, ft=features).to(device)
@@ -110,7 +110,7 @@ def train(layers, features, device,
         'val_loss': loss_stats["val"], 
         'num_epoch_convergence': epoch_no
     }
-    with open(f'runlogs_repeat/{model_name}.json', 'w+') as file:
+    with open(log_folder+f'{model_name}.json', 'w+') as file:
                     json.dump(run, file, indent=4)
     return run
 
