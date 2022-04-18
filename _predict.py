@@ -2,11 +2,12 @@ from _UNET import UNet
 import torch
 from _load_data import get_data
 import matplotlib.pyplot as plt
-
-import nibabel as nib
-import pathlib
 import numpy as np
 import json
+
+# import nibabel as nib
+# import pathlib
+
 
 ############################# LOADING THE MODEL  #############################
 model_path = "MODELS\LYRS=3;FT=12;BS=4;LR=0.005;WD=0.pth"
