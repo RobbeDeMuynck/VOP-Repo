@@ -13,6 +13,14 @@ import json
 model_path = "MODELS\LYRS=3;FT=12;BS=4;LR=0.005;WD=0.pth"
 # model_path = "MODELS\BS=8;LR=0.001;WD=0.09;FT=4.pth"
 model_runlog = "runlogs\LYRS=3;FT=12;BS=4;LR=0.005;WD=0.json"
+
+### plots presentation ###
+good = 3, 16, 4, 0.001
+bad = 4, 4, 12, 1e-5 #LYRS=4;FT=4;BS=12;LR=1e-05;WD=0
+
+model_path = "MODELS\LYRS={};FT={};BS={};LR={};WD=0".format(*bad) + ".pth"
+model_runlog = "runlogs\LYRS={};FT={};BS={};LR={};WD=0".format(*bad) + ".json"
+
 with open(model_runlog, 'r') as RUN:
     run = json.load(RUN)
     layers, features = run["layers"], run["features"]
@@ -26,61 +34,78 @@ model.load_state_dict(torch.load(model_path))
 def normalize(arr):
     return (arr-np.mean(arr))/np.std(arr)
 input, target, val_input, val_target = get_data(plane='transversal', val_mouse=5)
-ind = 117
+ind = 80
 slice_input, slice_target = normalize(val_input[ind]), normalize(val_target[ind])
 slice_to_predict = torch.from_numpy(np.array(slice_input.copy())).unsqueeze(0).unsqueeze(0)
 
 ### APPLY MODEL ###
 model.eval()
 slice_prediction = torch.squeeze(model(slice_to_predict)[0]).detach().numpy()
-### Only for 3 layers ###
-after_conv1 = torch.squeeze(model(slice_to_predict)[1]).detach().numpy()
-after_pool1 = torch.squeeze(model(slice_to_predict)[2]).detach().numpy()
-after_conv2 = torch.squeeze(model(slice_to_predict)[3]).detach().numpy()
-after_pool2 = torch.squeeze(model(slice_to_predict)[4]).detach().numpy()
-after_conv3 = torch.squeeze(model(slice_to_predict)[5]).detach().numpy()
-after_pool3 = torch.squeeze(model(slice_to_predict)[6]).detach().numpy()
-after_bottle = torch.squeeze(model(slice_to_predict)[7]).detach().numpy()
-after_decoder1 = torch.squeeze(model(slice_to_predict)[8]).detach().numpy()
-after_decoder2 = torch.squeeze(model(slice_to_predict)[9]).detach().numpy()
-after_decoder3 = torch.squeeze(model(slice_to_predict)[10]).detach().numpy()
-### PLOT RESULTS Only for 3 layers, plots first feature ###
-fig, axs = plt.subplots(2, 4)
-axs[0,0].imshow(slice_input, cmap='viridis')
-axs[0,1].imshow(slice_target, cmap='viridis')
-axs[0,2].imshow(slice_prediction, cmap='viridis')
-axs[0,3].imshow(after_conv1[0], cmap='viridis')
-axs[1,0].imshow(after_pool1[0], cmap='viridis')
-axs[1,1].imshow(after_conv2[0], cmap='viridis')
-axs[1,2].imshow(after_pool2[0], cmap='viridis')
-axs[1,3].imshow(after_conv3[0], cmap='viridis')
 
-axs[0,0].set_title('Input')
-axs[0,1].set_title('Target')
-axs[0,2].set_title('Prediction')
-axs[0,3].set_title('after conv1')
-axs[1,0].set_title('after pool1')
-axs[1,1].set_title('after conv_2')
-axs[1,2].set_title('after pool2')
-axs[1,3].set_title('after conv_3')
+# plot input vs prediction
+fig, axs = plt.subplots(1, 3)
+axs[0].imshow(slice_input, cmap='viridis')
+axs[1].imshow(slice_target, cmap='viridis')
+axs[2].imshow(slice_prediction, cmap='viridis')
+
+axs[0].set_title('Input')
+axs[1].set_title('Target')
+axs[2].set_title('Prediction')
+plt.tight_layout()
+plt.savefig(f'IMAGES/PRED_GOOD_{ind}.png', dpi=200)
 plt.show()
 
-fig, axs = plt.subplots(2, 3)
-axs[0,0].imshow(after_pool3[0], cmap='viridis')
-axs[0,1].imshow(after_bottle[0], cmap='viridis')
-axs[0,2].imshow(after_decoder1[0], cmap='viridis')
-axs[1,0].imshow(after_decoder2[0], cmap='viridis')
-axs[1,1].imshow(after_decoder3[0], cmap='viridis')
-axs[1,2].imshow(slice_prediction, cmap='viridis')
+
+# ### Only for 3 layers ###
+# after_conv1 = torch.squeeze(model(slice_to_predict)[1]).detach().numpy()
+# after_pool1 = torch.squeeze(model(slice_to_predict)[2]).detach().numpy()
+# after_conv2 = torch.squeeze(model(slice_to_predict)[3]).detach().numpy()
+# after_pool2 = torch.squeeze(model(slice_to_predict)[4]).detach().numpy()
+# after_conv3 = torch.squeeze(model(slice_to_predict)[5]).detach().numpy()
+# after_pool3 = torch.squeeze(model(slice_to_predict)[6]).detach().numpy()
+# after_bottle = torch.squeeze(model(slice_to_predict)[7]).detach().numpy()
+# after_decoder1 = torch.squeeze(model(slice_to_predict)[8]).detach().numpy()
+# after_decoder2 = torch.squeeze(model(slice_to_predict)[9]).detach().numpy()
+# after_decoder3 = torch.squeeze(model(slice_to_predict)[10]).detach().numpy()
+# ### PLOT RESULTS Only for 3 layers, plots first feature ###
+# fig, axs = plt.subplots(2, 4)
+# axs[0,0].imshow(slice_input, cmap='viridis')
+# axs[0,1].imshow(slice_target, cmap='viridis')
+# axs[0,2].imshow(slice_prediction, cmap='viridis')
+# axs[0,3].imshow(after_conv1[0], cmap='viridis')
+# axs[1,0].imshow(after_pool1[0], cmap='viridis')
+# axs[1,1].imshow(after_conv2[0], cmap='viridis')
+# axs[1,2].imshow(after_pool2[0], cmap='viridis')
+# axs[1,3].imshow(after_conv3[0], cmap='viridis')
+
+# axs[0,0].set_title('Input')
+# axs[0,1].set_title('Target')
+# axs[0,2].set_title('Prediction')
+# axs[0,3].set_title('after conv1')
+# axs[1,0].set_title('after pool1')
+# axs[1,1].set_title('after conv_2')
+# axs[1,2].set_title('after pool2')
+# axs[1,3].set_title('after conv_3')
+# plt.show()
+
+# fig, axs = plt.subplots(2, 3)
+# axs[0,0].imshow(after_pool3[0], cmap='viridis')
+# axs[0,1].imshow(after_bottle[0], cmap='viridis')
+# axs[0,2].imshow(after_decoder1[0], cmap='viridis')
+# axs[1,0].imshow(after_decoder2[0], cmap='viridis')
+# axs[1,1].imshow(after_decoder3[0], cmap='viridis')
+# axs[1,2].imshow(slice_prediction, cmap='viridis')
 
 
-axs[0,0].set_title('after pool3')
-axs[0,1].set_title('after bottle')
-axs[0,2].set_title('after decoder1')
-axs[1,0].set_title('after decoder2')
-axs[1,1].set_title('after decoder3')
-axs[1,2].set_title('Prediction')
-plt.show()
+# axs[0,0].set_title('after pool3')
+# axs[0,1].set_title('after bottle')
+# axs[0,2].set_title('after decoder1')
+# axs[1,0].set_title('after decoder2')
+# axs[1,1].set_title('after decoder3')
+# axs[1,2].set_title('Prediction')
+# plt.show()
+
+####
 
 # im_frame = Image.open("IMAGES/PF.png")
 # R, G, B = np.array(im_frame).T

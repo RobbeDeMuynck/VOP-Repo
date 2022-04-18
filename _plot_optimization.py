@@ -16,7 +16,7 @@ for file in files:
         run = json.load(RUN)
         ### Select cases using 'if'-statement ###
         train_time.append(run["train_time"])
-        if min(run["val_loss"]) < 0.01 and run["train_time"]/60 < 8: # and run["learning_rate"] >= 0.001
+        if True: #min(run["val_loss"]) < 0.01 and run["train_time"]/60 < 8: # and run["learning_rate"] >= 0.001
             vals["Layers"].append(run["layers"])
             vals['Starting features'].append(run["features"])
 
@@ -45,9 +45,9 @@ Average training time:\t{np.mean(train_time)/60}""")
 sns.set_theme(style="white", font_scale = 1.25)
 sns.relplot(data=Data, x="Training time [mins]", y="Minimum validation loss", 
             hue="Learning rate", style = "Starting features", size="Batch size", col="Layers",
-            sizes=(50, 350), alpha=.75, palette="colorblind", height=6).set(ylabel="Validation MSE loss (batch-average)").set(xlim=(0, 2.2),ylim=(0.0025,0.0055), ylabel="Validation MSE loss (batch-average)")
+            sizes=(50, 350), alpha=.75, palette="colorblind", height=6)#.set(ylabel="Validation MSE loss (batch-average)").set(xlim=(0, 2.2),ylim=(0.0025,0.0055), ylabel="Validation MSE loss (batch-average)")
 
-plt.savefig("IMAGES/TUNING3.png", dpi=200)
+# plt.savefig("IMAGES/TUNING3.png", dpi=200)
 plt.show()
 
 # sns.lineplot(data=Data, y="Training", palette=palette)
