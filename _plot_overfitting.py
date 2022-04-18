@@ -19,7 +19,7 @@ import numpy as np
 #        losses = train_loss, val_loss
 # 4, 12, 12, 0.001, 0
 
-with open(Path('runlogs/LYRS={};FT={};BS={};LR={};WD={}.json'.format(3, 12, 4, 0.001, 0)), 'r') as RUN:
+with open(Path('runlogs_overfitting/LYRS={};FT={};BS={};LR={};WD={}.json'.format(3, 12, 4, 0.001, 0)), 'r') as RUN:
     run = json.load(RUN)
     losses = run["train_loss"], run["val_loss"]
 
