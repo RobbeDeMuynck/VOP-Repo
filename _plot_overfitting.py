@@ -19,21 +19,26 @@ import numpy as np
 #        losses = train_loss, val_loss
 # 4, 12, 12, 0.001, 0
 
-with open(Path('runlogs_overfitting/LYRS={};FT={};BS={};LR={};WD={}.json'.format(3, 12, 4, 0.001, 0)), 'r') as RUN:
+with open(Path('runlogs/LYRS={};FT={};BS={};LR={};WD={}.json'.format(3, 12, 8, 0.001, 0)), 'r') as RUN:
     run = json.load(RUN)
     losses = run["train_loss"], run["val_loss"]
 
 n = len(losses)
 palette = sns.color_palette("mako_r", n)
 palette = sns.color_palette("crest", n)
+palette = sns.color_palette("colorblind")
+fs = 20
 fig, ax = plt.subplots(1, 1)
-ax.semilogy(losses[0], color=palette[0], label='Training losses')
-ax.semilogy(losses[1], color=palette[1], label='Validation losses')
+ax.semilogy(losses[0], lw=5, color=palette[0], label='Training losses') # semilogy
+ax.semilogy(losses[1], lw=5, color=palette[1], label='Validation losses')
 ax.axvline(x=np.argmin(losses[1]), c='k', ls='--', label='Last saved version')
-ax.set_title('MSE loss decay per epoch')
-ax.set_xlabel('Epoch number')
-ax.set_ylabel('MSE loss')
-ax.legend()
+ax.set_title('MSE loss decay per epoch', fontsize=fs+10)
+ax.set_xlabel('Epoch number', fontsize=fs)
+ax.set_ylabel('MSE loss (batch-average)', fontsize=fs)
+ax.legend(fontsize=fs)
 ax.grid()
+
+plt.tight_layout()
+plt.savefig('Overfit_prevention.png', dpi=200)
 plt.show()
 
