@@ -110,7 +110,7 @@ def train(layers, features, device,
         'val_loss': loss_stats["val"], 
         'num_epoch_convergence': epoch_no
     }
-    with open(log_folder+f'{model_name}.json', 'w+') as file:
+    with open(log_folder+f'/{model_name}.json', 'w+') as file:
                     json.dump(run, file, indent=4)
     return run
 
