@@ -34,7 +34,7 @@ model.load_state_dict(torch.load(model_path))
 def normalize(arr):
     return (arr-np.mean(arr))/np.std(arr)
 input, target, val_input, val_target = get_data(plane='transversal', val_mouse=5)
-ind = 80
+ind = 150
 slice_input, slice_target = normalize(val_input[ind]), normalize(val_target[ind])
 slice_to_predict = torch.from_numpy(np.array(slice_input.copy())).unsqueeze(0).unsqueeze(0)
 
@@ -52,7 +52,7 @@ axs[0].set_title('Input')
 axs[1].set_title('Target')
 axs[2].set_title('Prediction')
 plt.tight_layout()
-plt.savefig(f'IMAGES/PRED_GOOD_{ind}.png', dpi=200)
+plt.savefig(f'IMAGES/PRED_BAD_{ind}.png', dpi=200)
 plt.show()
 
 
