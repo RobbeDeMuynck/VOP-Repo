@@ -53,5 +53,5 @@ ax.legend(fontsize=fs)
 ax.grid()
 
 plt.tight_layout()
-#plt.savefig('IMAGES/Learning.png', dpi=200)
+plt.savefig('IMAGES/Learning.png', dpi=200)
 plt.show()
