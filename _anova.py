@@ -2,6 +2,7 @@ from _load_data import MiceDataset, get_data
 import torch
 from torch.utils.data import DataLoader
 from _train import train
+import json
 
 ### Declare device ###
 device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
@@ -19,7 +20,9 @@ layers = [3] # [3, 4]
 features = [12] # [4, 8, 12, 16]
 val_mouses = [0,1,2,3,4,5]
 
-repeats = 1
+losses = []
+
+repeats = 10
 ### Train model ###
 for LYRS in layers:
         for FT in features:
@@ -37,8 +40,11 @@ for LYRS in layers:
                                                         log_folder = 'runlogs_kfold'
                                                         if repeats > 1:
                                                                 model_name += f';RUN={i}'
-                                                                log_folder = 'runlogs_repeat'
-                                                        train(LYRS, FT, device,
+                                                                log_folder = 'runlogs_kfold'
+                                                        run = train(LYRS, FT, device,
                                                                 train_loader, val_loader,
                                                                 num_epochs, BS, learning_rate=LR, weight_decay=WD, patience=patience,
                                                                 model_name=model_name, log_folder=log_folder, save=True)
+                                                        losses.append(run['val_loss'])
+with open('anova.json', 'w+') as file:
+                    json.dump(losses, file, indent=4)
