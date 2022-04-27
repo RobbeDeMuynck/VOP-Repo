@@ -87,8 +87,8 @@ def get_data(plane='transversal', val_mouse=5):
         # val_transversal_001h  (242 slices)
         # val_transversal_024h  (242 slices)
 
-    ### Loading sagittal slices ###
-    elif plane=='sagittal':
+    ### Loading coronal slices ###
+    elif plane=='coronal':
 
         train_sagittal_001h = []
         train_sagittal_024h = []
@@ -115,8 +115,8 @@ def get_data(plane='transversal', val_mouse=5):
         #val_sagittal_001h  (100 slices)
         #val_sagittal_024h  (100 slices)
 
-    ### Loading coronal slices ###
-    elif plane=='coronal':
+    ### Loading sagittal slices ###
+    elif plane=='sagittal':
 
         train_coronal_001h = []
         train_coronal_024h = []
