@@ -21,7 +21,7 @@ from torch.utils.data import DataLoader
 
 def train(layers, features, device,
         train_loader, val_loader,
-        num_epochs=100, batch_size=4, learning_rate=1e-3, weight_decay=0, patience=5,
+        num_epochs=100, batch_size=4, learning_rate=1e-2, weight_decay=0, patience=5,
         model_name='SEGG', log_folder='runlogs_segmentation', save=True):
 
     ### Declare network architecture ###
