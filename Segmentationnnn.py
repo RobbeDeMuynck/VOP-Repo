@@ -20,7 +20,6 @@ import json
 
 from _load_data import MiceDataset, get_data
 from torch.utils.data import DataLoader
-from torchsummary import summary
 
 path = pathlib.Path(__file__).parent
 
