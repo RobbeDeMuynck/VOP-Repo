@@ -20,9 +20,15 @@ import json
 
 from _load_data import MiceDataset, get_data
 from torch.utils.data import DataLoader
+from torchsummary import summary
 
 path = pathlib.Path(__file__).parent
 
+layers = 4
+features = 16
+
+device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+torch.cuda.empty_cache()
 
 def get_data(val_mouse = 5):
     train_input, train_target = [],[]
@@ -45,7 +51,7 @@ def get_data(val_mouse = 5):
             for i in range(ct.shape[-1]):
                 train_input.append(ct[:,:,i])
                 train_target.append(organ[:,:,i])
-
+            print(f'CT size:{ct.shape}')
 
     for mouse in val_names:
         for timestamp in ["024h"]:
@@ -65,7 +71,13 @@ def get_data(val_mouse = 5):
                 val_target.append(organ[:,:,i])
 
     x1,y1,x2,y2 = np.array(train_input), np.array(train_target,dtype=int), np.array(val_input), np.array(val_target,dtype=int)
-    print(y1.shape)
+    print(x1.shape,y1.shape,x2.shape,y2.shape)
+    print("Data Initialized")
+    print("/n")
+    print("/n")
+    print("/n")
+
+    print("/n")
     return x1,y1,x2,y2
 
         # with open(path_class) as f:
@@ -78,10 +90,6 @@ def to_categorical(y, num_classes):
     """ 1-hot encodes a tensor """
     return np.eye(num_classes, dtype='uint8')[y]
 
-a = to_categorical(get_data()[1][820,:,:],13)
-print(a.shape)
-plt.imshow(a[:,:,3])
-plt.show()
 class MiceDataset(Dataset):
     def __init__(self, data_in, target, p=0.5):
         super().__init__()
@@ -105,11 +113,11 @@ class MiceDataset(Dataset):
             target = np.fliplr(target)
         
         input = torch.from_numpy(input.copy()).unsqueeze(0).float()
-        target = torch.from_numpy(target.copy()).unsqueeze(0).float()
+        target = torch.from_numpy(target.copy()).float()
+        target_2 = target.view(target.shape[-1],target.shape[0],target.shape[1])
+        #torch.reshape(target,(target.shape[-1],target.shape[0],target.shape[1]))
         
-        return input, target
-
-get_data()
+        return input, target_2
 
 
 
@@ -237,7 +245,7 @@ class UNet(nn.Module):
             self.d4 = decoder_block(2*ft,ft)
 
             ### Last layer: mapping to prediction ###
-            self.outputs = nn.Conv2d(ft, 1, kernel_size=1, padding=0)
+            self.outputs = nn.Conv2d(ft, 13, kernel_size=1, padding=0)
         else: 
             raise Exception("Cannot construct networ: 'layers' parameter can only be 3 or 4")
 
@@ -245,6 +253,7 @@ class UNet(nn.Module):
         if self.layers == 3:
             ### Encoder ###
             # Store skip connections in dictionary for later use in decoder
+            print(f'inputsizeUNET: {inputs.shape}')
             s1, p1 = self.e1(inputs)
             s2, p2 = self.e2(p1)
             s3, p3 = self.e3(p2)
@@ -282,104 +291,8 @@ class UNet(nn.Module):
             outputs = self.outputs(d4)
             return outputs,s1,p1,s2,p2,s3,p3,s4,p4,b,d1,d2,d3,d4
         
-
-def train(layers, features, device,
-        train_loader, val_loader,
-        num_epochs, batch_size, learning_rate=1e-3, weight_decay=0, patience=5,
-        model_name='SEGGG', log_folder='runlogs_segmentation', save=True):
-
-    ### Declare network architecture ###
-    model = UNet(layers=layers, ft=features).to(device)
-    ### Declare loss function & optimizer ###
-    loss_function = nn.BCEWithLogitsLoss().to(device)
-    optimizer = Adam(model.parameters(), lr=learning_rate, weight_decay=weight_decay)
-
-    print('Starting with training...')
-    loss_stats = {
-        'train': [],
-        'val': []
-        }
-    best_loss = np.inf
-    starttime = time.time()
-    for epoch in range(1, num_epochs+1):
-        model.train().to(device)
-        train_epoch_loss = 0
-        print(f"Epoch: {epoch}/{num_epochs}")
-        for input_batch, target_batch in tqdm(train_loader):
-            
-            # Put batch on GPU
-            input_batch = input_batch.to(device)
-            target_batch = target_batch.to(device)
-            optimizer.zero_grad()
-            
-            prediction_batch = model(input_batch)[0].to(device)
-            _, _, H, W = prediction_batch.shape
-            target_batch = torchvision.transforms.CenterCrop([H,W])(target_batch)
-            loss = loss_function(prediction_batch, target_batch) # Compare prediction with target
-            loss.backward()
-            optimizer.step()
-
-            train_epoch_loss += loss.item()
-            
-            input_batch = torchvision.transforms.CenterCrop([H,W])(input_batch)
-        
-        ### Prevent overfitting ###
-        with torch.no_grad():
-            val_epoch_loss = 0
-                
-            model.eval().to(device)
-            for val_input_batch, val_target_batch in val_loader:
-                val_input_batch = val_input_batch.to(device)
-                val_target_batch = val_target_batch.to(device)
-
-                val_pred = model(val_input_batch)[0].to(device)
-                val_target_batch = torchvision.transforms.CenterCrop([H,W])(val_target_batch)
-
-                val_loss = loss_function(val_pred, val_target_batch)
-                val_epoch_loss += val_loss.item()
-        
-        # Store the batch-average MSE loss per epoch
-        loss_stats["train"].append(train_epoch_loss/len(train_loader))
-        loss_stats["val"].append(val_epoch_loss/len(val_loader))
-        
-        if loss_stats["val"][-1] < best_loss:
-            endtime = time.time()
-            best_loss, epoch_no = loss_stats["val"][-1], epoch
-            if save == True:
-                torch.save(model.state_dict(), 'MODELS/'+model_name+'.pth')
-                print(f"    --> Model saved at epoch no. {epoch_no}")
-        
-        print(f"""
-    Training loss: {loss_stats["train"][-1]}
-    Last validation losses: {loss_stats['val'][-patience:]}
-    Best loss: {best_loss}""")
-
-        if np.all(np.array(loss_stats['val'][-patience:]) > best_loss):
-            print(f"""
-    Training terminated after epoch no. {epoch}
-    Model saved as '{model_name}.pth': version at epoch no. {epoch_no}""")
-
-            break
-        elif epoch == num_epochs:
-            epoch_no = epoch
-            print(f"Model trained succesfully and saved as: '{model_name}.pth'")
-
-    ### Dictionary with model details ###
-    run = {
-        'train_time' : endtime-starttime,
-        'layers': layers,
-        'features': features,
-
-        'num_epochs': num_epochs,
-        'batch_size': batch_size,
-        'learning_rate': learning_rate,
-        'weight_decay': weight_decay,
-        'patience': patience,
-        
-        'train_loss': loss_stats["train"],
-        'val_loss': loss_stats["val"], 
-        'num_epoch_convergence': epoch_no
-    }
-    with open(log_folder+f'/{model_name}.json', 'w+') as file:
-                    json.dump(run, file, indent=4)
-    return run
+# train_in,train_tar,_,_ = get_data()
+# data = MiceDataset(train_in,train_tar)
+# data.__getitem__(500)
+# model = UNet(layers=layers, ft=features)
+# pred = model(data.__getitem__(500)[0])
