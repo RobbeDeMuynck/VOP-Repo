@@ -8,13 +8,6 @@ import json
 # a = []
 import pydicom
 
-filename = 'MOLECUBE/20220427142259_CT_ISRA_0_frozen_mouse_1.dcm'
-ds = pydicom.dcmread(filename)
-scan = ds.pixel_array.astype(float)
-print(scan.shape)
-scan = scan.T
-new_image = scan[len(scan)//2]
-
 # import nibabel as nib
 # import pathlib
 
@@ -43,25 +36,37 @@ model.load_state_dict(torch.load(model_path))
 ### LOAD IMAGES & NORMALIZE DATA ###
 def normalize(arr):
     return (arr-np.mean(arr))/np.std(arr)
-input, target, val_input, val_target = get_data(plane='sagittal', val_mouse=0)
-ind = len(val_input)//2
-slice_input, slice_target = normalize(val_input[ind]), normalize(val_target[ind])
-slice_to_predict = torch.from_numpy(np.array(slice_input.copy())).unsqueeze(0).unsqueeze(0)
+# input, target, val_input, val_target = get_data(plane='transversal', val_mouse=0)
+# ind = len(val_input)//2
+# slice_input, slice_target = normalize(val_input)[ind], normalize(val_target)[ind]
+# slice_to_predict = torch.from_numpy(np.array(slice_input.copy())).unsqueeze(0).unsqueeze(0)
 
-slice_input, slice_target = normalize(new_image), None
+filename = 'MOLECUBES/20220427142259_CT_ISRA_0_frozen_mouse_1.dcm'
+ds = pydicom.dcmread(filename)
+scan = ds.pixel_array.astype(float).T
+scan = normalize(scan)
+print(scan.shape)
+new_image = scan[len(scan)//2]
+ind = 100
+new_image = scan[ind]
+
+slice_input, slice_target = new_image, None
 slice_to_predict = torch.from_numpy(np.array(slice_input.copy())).unsqueeze(0).unsqueeze(0)
 
 ### APPLY MODEL ###
 model.eval()
 slice_prediction = torch.squeeze(model(slice_to_predict)[0]).detach().numpy()
+#offset = slice_prediction-slice_input
 
 # plot input vs prediction
-fig, axs = plt.subplots(1, 2)
+fig, axs = plt.subplots(1, 3)
 axs[0].imshow(slice_input, cmap='viridis', vmin=np.min(slice_input), vmax=np.max(slice_input)*0.25)
-axs[1].imshow(slice_prediction, cmap='viridis', vmin=np.min(slice_input), vmax=np.max(slice_input)*0.25)
+axs[1].imshow(slice_prediction, cmap='viridis', vmin=np.min(slice_prediction), vmax=np.max(slice_prediction)*0.25)
+#axs[2].imshow(offset, cmap='viridis', vmin=np.min(offset), vmax=np.max(offset)*0.25)
 
 axs[0].set_title('Input')
 axs[1].set_title('Prediction')
+axs[2].set_title('Prediction - Input')
 plt.tight_layout()
 #plt.savefig(f'IMAGES/PRED_SAG.png', dpi=200)
 plt.show()
