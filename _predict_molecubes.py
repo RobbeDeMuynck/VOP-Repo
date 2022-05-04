@@ -43,12 +43,16 @@ def normalize(arr):
 
 filename = 'MOLECUBES/20220427142259_CT_ISRA_0_frozen_mouse_1.dcm'
 ds = pydicom.dcmread(filename)
-scan = ds.pixel_array.astype(float).T
+scan = ds.pixel_array.astype(float)
 scan = normalize(scan)
 print(scan.shape)
 new_image = scan[len(scan)//2]
-ind = 100
+
+ind = 200
 new_image = scan[ind]
+print(new_image.shape)
+new_image = new_image[0:len(new_image)*3//4,:]
+print(new_image.shape)
 
 slice_input, slice_target = new_image, None
 slice_to_predict = torch.from_numpy(np.array(slice_input.copy())).unsqueeze(0).unsqueeze(0)
@@ -60,13 +64,13 @@ slice_prediction = torch.squeeze(model(slice_to_predict)[0]).detach().numpy()
 
 # plot input vs prediction
 fig, axs = plt.subplots(1, 3)
-axs[0].imshow(slice_input, cmap='viridis', vmin=np.min(slice_input), vmax=np.max(slice_input)*0.25)
-axs[1].imshow(slice_prediction, cmap='viridis', vmin=np.min(slice_prediction), vmax=np.max(slice_prediction)*0.25)
-#axs[2].imshow(offset, cmap='viridis', vmin=np.min(offset), vmax=np.max(offset)*0.25)
+axs[0].imshow(slice_input, cmap='bone', vmin=np.min(slice_input), vmax=np.max(slice_input)*0.25)
+axs[1].imshow(slice_prediction, cmap='bone', vmin=np.min(slice_prediction), vmax=np.max(slice_prediction)*0.25)
+#axs[2].imshow(offset, cmap='bone', vmin=np.min(offset), vmax=np.max(offset)*0.25)
 
 axs[0].set_title('Input')
 axs[1].set_title('Prediction')
-axs[2].set_title('Prediction - Input')
+#axs[2].set_title('Prediction - Input')
 plt.tight_layout()
 #plt.savefig(f'IMAGES/PRED_SAG.png', dpi=200)
 plt.show()

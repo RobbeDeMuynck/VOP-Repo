@@ -18,8 +18,8 @@ model_runlog = "runlogs\LYRS=3;FT=12;BS=4;LR=0.005;WD=0.json"
 good = 3, 16, 4, 0.001
 bad = 4, 4, 12, 1e-5 #LYRS=4;FT=4;BS=12;LR=1e-05;WD=0
 
-model_path = "MODELS\LYRS={};FT={};BS={};LR={};WD=0".format(*bad) + ".pth"
-model_runlog = "runlogs\LYRS={};FT={};BS={};LR={};WD=0".format(*bad) + ".json"
+model_path = "MODELS\LYRS={};FT={};BS={};LR={};WD=0".format(*good) + ".pth"
+model_runlog = "runlogs\LYRS={};FT={};BS={};LR={};WD=0".format(*good) + ".json"
 
 with open(model_runlog, 'r') as RUN:
     run = json.load(RUN)
@@ -33,7 +33,7 @@ model.load_state_dict(torch.load(model_path))
 ### LOAD IMAGES & NORMALIZE DATA ###
 def normalize(arr):
     return (arr-np.mean(arr))/np.std(arr)
-input, target, val_input, val_target = get_data(plane='sagittal', val_mouse=0)
+input, target, val_input, val_target = get_data(plane='coronal', val_mouse=0)
 ind = len(val_input)//2
 slice_input, slice_target = normalize(val_input[ind]), normalize(val_target[ind])
 slice_to_predict = torch.from_numpy(np.array(slice_input.copy())).unsqueeze(0).unsqueeze(0)
@@ -48,11 +48,15 @@ axs[0].imshow(slice_input, cmap='viridis')
 axs[1].imshow(slice_target, cmap='viridis')
 axs[2].imshow(slice_prediction, cmap='viridis')
 
+axs[0].imshow(slice_input, cmap='bone')
+axs[1].imshow(slice_target, cmap='bone')
+axs[2].imshow(slice_prediction, cmap='bone')
+
 axs[0].set_title('Input')
 axs[1].set_title('Target')
 axs[2].set_title('Prediction')
 plt.tight_layout()
-plt.savefig(f'IMAGES/PRED_SAG.png', dpi=200)
+# plt.savefig(f'IMAGES/PRED_SAG.png', dpi=200)
 plt.show()
 
 
