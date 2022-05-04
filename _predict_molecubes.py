@@ -57,14 +57,14 @@ new_image = scan[ind]
 new_image = new_image[50:310,50:300] # Crop
 
 # Set threshold
-new_image = np.clip(new_image, np.min(new_image), np.max(new_image)*0.75)
+new_image = np.clip(new_image, np.min(new_image), np.max(new_image)*0.22)
 
 slice_input, slice_target = new_image, None
 slice_to_predict = torch.from_numpy(np.array(slice_input.copy())).unsqueeze(0).unsqueeze(0)
 
 ### APPLY MODEL ###
 model.eval()
-slice_prediction = torch.squeeze(model(slice_to_predict)[0]).detach().numpy()
+slice_prediction = normalize(torch.squeeze(model(slice_to_predict)[0]).detach().numpy())
 n_in, m_in, n_out, m_out = len(slice_input), len(slice_input[0]), len(slice_prediction), len(slice_prediction[0])
 n_crop, m_crop = (n_in-n_out)//2, (m_in-m_out)//2
 print(n_crop, m_crop)
