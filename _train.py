@@ -16,7 +16,7 @@ from torch.utils.data import DataLoader
 def train(layers, features, device,
         train_loader, val_loader,
         num_epochs, batch_size, learning_rate=1e-3, weight_decay=0, patience=5,
-        model_name='TEST', save=True):
+        model_name='TEST', log_folder='runlogs', save=True):
 
     ### Declare network architecture ###
     model = UNet(layers=layers, ft=features).to(device)
@@ -42,11 +42,9 @@ def train(layers, features, device,
             target_batch = target_batch.to(device)
             optimizer.zero_grad()
             
-            prediction_batch = model(input_batch).to(device)
-            
+            prediction_batch = model(input_batch)[0].to(device)
             _, _, H, W = prediction_batch.shape
             target_batch = torchvision.transforms.CenterCrop([H,W])(target_batch)
-            
             loss = loss_function(prediction_batch, target_batch) # Compare prediction with target
             loss.backward()
             optimizer.step()
@@ -64,7 +62,7 @@ def train(layers, features, device,
                 val_input_batch = val_input_batch.to(device)
                 val_target_batch = val_target_batch.to(device)
 
-                val_pred = model(val_input_batch)
+                val_pred = model(val_input_batch)[0].to(device)
                 val_target_batch = torchvision.transforms.CenterCrop([H,W])(val_target_batch)
 
                 val_loss = loss_function(val_pred, val_target_batch)
@@ -112,7 +110,7 @@ def train(layers, features, device,
         'val_loss': loss_stats["val"], 
         'num_epoch_convergence': epoch_no
     }
-    with open(f'runlogs/{model_name}.json', 'w+') as file:
+    with open(log_folder+f'/{model_name}.json', 'w+') as file:
                     json.dump(run, file, indent=4)
     return run
 
