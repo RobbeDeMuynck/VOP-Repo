@@ -34,7 +34,7 @@ model.load_state_dict(torch.load(model_path))
 def normalize(arr):
     return (arr-np.mean(arr))/np.std(arr)
 input, target, val_input, val_target = get_data(plane='sagittal', val_mouse=0)
-ind = 110
+ind = 105
 slice_input, slice_target = normalize(val_input[ind]), normalize(val_target[ind])
 slice_to_predict = torch.from_numpy(np.array(slice_input.copy())).unsqueeze(0).unsqueeze(0)
 
