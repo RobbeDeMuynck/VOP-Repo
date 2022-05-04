@@ -8,6 +8,7 @@ import json
 # a = []
 import pydicom
 from mpl_toolkits.axes_grid1 import make_axes_locatable
+from pathlib import Path
 
 # import nibabel as nib
 # import pathlib
@@ -42,18 +43,21 @@ def normalize(arr):
 # slice_input, slice_target = normalize(val_input)[ind], normalize(val_target)[ind]
 # slice_to_predict = torch.from_numpy(np.array(slice_input.copy())).unsqueeze(0).unsqueeze(0)
 
-filename = 'MOLECUBES/mouse_alive.dcm'
+path = Path(__file__).parent.parent
+filename = path / 'MOLECUBES/20220427143750_CT_ISRA_0_phantom.dcm'
+
 ds = pydicom.dcmread(filename)
 scan = ds.pixel_array.astype(float)
 scan = normalize(scan)
 print(scan.shape)
 new_image = scan[len(scan)//2]
 
-ind = 250
+ind = 50
 new_image = scan[ind]
-print(new_image.shape)
-new_image = new_image[0:len(new_image),:]
-print(new_image.shape)
+new_image = new_image[50:310,50:300] # Crop
+
+# Set threshold
+new_image = np.clip(new_image, np.min(new_image), np.max(new_image)*0.75)
 
 slice_input, slice_target = new_image, None
 slice_to_predict = torch.from_numpy(np.array(slice_input.copy())).unsqueeze(0).unsqueeze(0)
@@ -61,18 +65,21 @@ slice_to_predict = torch.from_numpy(np.array(slice_input.copy())).unsqueeze(0).u
 ### APPLY MODEL ###
 model.eval()
 slice_prediction = torch.squeeze(model(slice_to_predict)[0]).detach().numpy()
-offset = slice_prediction-slice_input
+n_in, m_in, n_out, m_out = len(slice_input), len(slice_input[0]), len(slice_prediction), len(slice_prediction[0])
+n_crop, m_crop = (n_in-n_out)//2, (m_in-m_out)//2
+print(n_crop, m_crop)
+offset = slice_prediction-slice_input[n_crop:-n_crop,m_crop:-m_crop]
 
 # plot input vs prediction
 fig, axs = plt.subplots(1, 3)
-axs[0].imshow(slice_input, cmap='viridis', vmin=np.min(slice_input), vmax=np.max(slice_input)*0.25)
-axs[1].imshow(slice_prediction, cmap='viridis', vmin=np.min(slice_prediction), vmax=np.max(slice_prediction)*0.25)
+axs[0].imshow(slice_input, cmap='bone', vmin=np.min(slice_input), vmax=np.max(slice_input))
+axs[1].imshow(slice_prediction, cmap='bone', vmin=np.min(slice_prediction), vmax=np.max(slice_prediction))
 
 
-off = axs[2].imshow(offset, cmap='viridis', vmin=np.min(offset), vmax=np.max(offset)*0.25)
+off = axs[2].imshow(offset, cmap='viridis', vmin=np.min(offset), vmax=np.max(offset))
 divider = make_axes_locatable(axs[2])
 cax = divider.append_axes('right', size='5%', pad=0.05)
-fig.colorbar(off, cax=cax, orientation='vertical');
+fig.colorbar(off, cax=cax, orientation='vertical')
 
 axs[0].set_title('Input')
 axs[1].set_title('Prediction')
