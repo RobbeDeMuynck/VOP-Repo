@@ -8,7 +8,7 @@ import json
 
 
 ############################# LOADING THE MODEL  #############################
-model_path = "MODELS\SEGG.pth"
+model_path = "MODELS/SEGG.pth"
 # model_path = "MODELS\BS=8;LR=0.001;WD=0.09;FT=4.pth"
 # model_runlog = "runlogs\LYRS=3;FT=12;BS=4;LR=0.005;WD=0.json"
 
@@ -31,13 +31,13 @@ slice_to_predict = torch.from_numpy(np.array(slice_input.copy())).unsqueeze(0).u
 
 ### APPLY MODEL ###
 model.eval()
-slice_prediction = torch.squeeze(model(slice_to_predict)[0]).detach().numpy()[5]
+slice_prediction = torch.squeeze(model(slice_to_predict)[0]).detach().numpy()
 print(slice_prediction.shape)
 # plot input vs prediction
 fig, axs = plt.subplots(1, 3)
 axs[0].imshow(slice_input, cmap='viridis')
 axs[1].imshow(slice_target, cmap='viridis')
-axs[2].imshow(slice_prediction, cmap='viridis')
+axs[2].imshow(slice_prediction[5,:,:], cmap='viridis')
 
 axs[0].set_title('Input')
 axs[1].set_title('Target')
