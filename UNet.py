@@ -34,9 +34,10 @@ class res_block(nn.Module):
         self.bn1 = nn.BatchNorm2d(out_channels)
         self.conv2 = nn.Conv2d(out_channels, out_channels, kernel_size=3, padding=1)
         self.bn2 = nn.BatchNorm2d(out_channels)
+        self.bn3 = nn.BatchNorm2d(out_channels)
         self.relu = nn.ReLU()
         ### SKIP CONNECTION (Identity Mapping)
-        # self.skip = nn.Conv2d(in_channels, out_channels, kernel_size=1, padding=0)
+        self.skip = nn.Conv2d(in_channels, out_channels, kernel_size=1, padding=0)
 
     def forward(self, inputs):
         inputs = inputs.float()
@@ -45,9 +46,12 @@ class res_block(nn.Module):
         x = self.relu(x)
         x = self.conv2(x)
         x = self.bn2(x)
-        x = self.relu(x)
-        # s = self.skip(inputs)
-        return x + inputs
+        
+        skip = self.skip(inputs)
+        skip = self.bn3(skip)
+        x = self.relu(x + skip) # Skip connection
+        #print('x size:', x.size(), '\nskip size:', skip.size())
+        return x
 
 class encoder_block(nn.Module):
     """Downscaling: double convolution (with identity mapping), followed by 2x2 maxpool."""

@@ -1,4 +1,4 @@
-from _UNET import UNet
+from UNet import UNet # from _UNET import UNet
 import torch
 import torch.nn as nn
 import torchvision
