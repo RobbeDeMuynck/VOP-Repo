@@ -16,7 +16,7 @@ patience = 5 #100
 
 ### Declare network architecture ###
 layers = [3] # [3, 4]
-features = [12] # [4, 8, 12, 16]
+features = [16] # [4, 8, 12, 16]
 val_mouses = [0]
 
 repeats = 10
