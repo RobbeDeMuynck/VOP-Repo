@@ -46,15 +46,15 @@ def normalize(arr):
 path = Path(__file__).parent.parent
 filename = path / 'MOLECUBES/20220427143750_CT_ISRA_0_phantom.dcm'
 
+filename = 'MOLECUBES/mouse_alive.dcm'
+
 ds = pydicom.dcmread(filename)
 scan = ds.pixel_array.astype(float)
-scan = normalize(scan)
-print(scan.shape)
-new_image = scan[len(scan)//2]
+scan = normalize(scan).T
 
-ind = 50
+ind = 150 # 250 # 50
 new_image = scan[ind]
-new_image = new_image[50:310,50:300] # Crop
+# new_image = new_image[50:310,50:300] # Crop
 
 # Set threshold
 new_image = np.clip(new_image, np.min(new_image), np.max(new_image)*0.22)
@@ -68,10 +68,10 @@ slice_prediction = normalize(torch.squeeze(model(slice_to_predict)[0]).detach().
 n_in, m_in, n_out, m_out = len(slice_input), len(slice_input[0]), len(slice_prediction), len(slice_prediction[0])
 n_crop, m_crop = (n_in-n_out)//2, (m_in-m_out)//2
 print(n_crop, m_crop)
-offset = slice_prediction-slice_input[n_crop:-n_crop,m_crop:-m_crop]
+offset = slice_prediction-slice_input[:,m_crop:-m_crop] # [n_crop:-n_crop,m_crop:-m_crop]
 
 # plot input vs prediction
-fig, axs = plt.subplots(1, 3)
+fig, axs = plt.subplots(3, 1)
 axs[0].imshow(slice_input, cmap='bone', vmin=np.min(slice_input), vmax=np.max(slice_input))
 axs[1].imshow(slice_prediction, cmap='bone', vmin=np.min(slice_prediction), vmax=np.max(slice_prediction))
 
