@@ -8,7 +8,7 @@ from torchsummary import summary
 # import pathlib
 
 ############################# LOADING THE MODEL  #############################
-model_path = "MODELS/SEGG.pth"
+model_path = "MODELS/SEGG64.pth"
 # model_path = "MODELS\BS=8;LR=0.001;WD=0.09;FT=4.pth"
 # model_runlog = "runlogs\LYRS=3;FT=12;BS=4;LR=0.005;WD=0.json"
 
@@ -28,27 +28,33 @@ def normalize(arr):
 input, target, val_input, val_target = get_data()
 ind = len(val_input)//2
 slice_input, slice_target = normalize(val_input[ind]), normalize(val_target[ind])
+print('gelukt')
+
 slice_to_predict = torch.from_numpy(np.array(slice_input.copy())).unsqueeze(0).unsqueeze(0)
+print(f'modelinputsliceshape: {slice_to_predict.shape}')
 
 ### APPLY MODEL ###
 model.eval()
 x = model(slice_to_predict)[0]
-#x = torch.squeeze(x).detach().numpy()[5]
+#print(x)
+
 print(x.shape)
-outputmap =np.argmax(x,axis=1)
-# slice_prediction = 
-# print(slice_prediction.shape)
-# # plot input vs prediction
-# fig, axs = plt.subplots(1, 2)
-# axs[0].imshow(slice_input, cmap='viridis')
-# axs[0].imshow(slice_target, cmap='GnBu_r',alpha=.5)
-# axs[1].imshow(slice_prediction, cmap='viridis',alpha=.5)
-# axs[1].imshow(slice_input, cmap='GnBu_r')
 
-# axs[0].set_title('Input')
-# axs[1].set_title('Prediction')
-# plt.tight_layout()
-# plt.savefig(f'IMAGES/PRED_SAG.png', dpi=200)
-# plt.show()
+x = torch.squeeze(x).detach().numpy()
+print(f'numpyshape:{x.shape}')
+
+slice_prediction =np.argmax(x,axis=0)
+
+# plot input vs prediction
+fig, axs = plt.subplots(1, 2)
+axs[0].imshow(slice_input, cmap='viridis')
+axs[0].imshow(slice_target, cmap='GnBu_r',alpha=.5)
+axs[1].imshow(slice_input,cmap='viridis')
+axs[1].imshow(slice_prediction, cmap='GnBu_r',alpha=.5)
 
 
+axs[0].set_title('Input')
+axs[1].set_title('Prediction')
+plt.tight_layout()
+plt.savefig(f'IMAGES/PRED_SAG.png', dpi=200)
+plt.show()

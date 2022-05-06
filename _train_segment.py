@@ -23,8 +23,8 @@ from torchsummary import summary
 def train(layers, features, device,
         train_loader, val_loader,
         num_epochs=50, batch_size=4, learning_rate=.01, weight_decay=0, patience=5,
-        model_name='SEGG', log_folder='runlogs_segmentation', save=True):
-
+        model_name='SEGG16_00', log_folder='runlogs_segmentation', save=True):
+    model_name = f'SEGG_layers{layers}_lr{learning_rate}_wd{weight_decay}_ft{features}'
     ### Declare network architecture ###
     model = UNet(layers=layers, ft=features).to(device)
     ### Declare loss function & optimizer ###
@@ -134,4 +134,4 @@ def train(layers, features, device,
 input, target, val_input, val_target = get_data()
 train_loader = DataLoader(MiceDataset(input, target), batch_size=4, shuffle=True, drop_last=True)
 val_loader = DataLoader(MiceDataset(val_input, val_target), batch_size=4, shuffle=True, drop_last=True)
-train(4,16,device,train_loader,val_loader)
+train(4,16,device,train_loader,val_loader,model_name='haha',learning_rate=.001,weight_decay=.01)
