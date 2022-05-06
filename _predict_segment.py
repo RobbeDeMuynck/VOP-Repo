@@ -8,7 +8,7 @@ from torchsummary import summary
 # import pathlib
 
 ############################# LOADING THE MODEL  #############################
-model_path = "MODELS\SEGG.pth"
+model_path = "MODELS/SEGG.pth"
 # model_path = "MODELS\BS=8;LR=0.001;WD=0.09;FT=4.pth"
 # model_runlog = "runlogs\LYRS=3;FT=12;BS=4;LR=0.005;WD=0.json"
 

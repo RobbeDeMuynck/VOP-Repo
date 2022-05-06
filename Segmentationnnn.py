@@ -25,7 +25,7 @@ from torch.utils.data import DataLoader
 path = pathlib.Path(__file__).parent
 
 layers = 4
-features = 16
+features = 64
 
 device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 torch.cuda.empty_cache()
