@@ -18,18 +18,19 @@ import time
 import json
 from Segmentationnnn import *
 from torch.utils.data import DataLoader
+from torchsummary import summary
 
 def train(layers, features, device,
         train_loader, val_loader,
-        num_epochs=100, batch_size=4, learning_rate=1e-2, weight_decay=0, patience=5,
+        num_epochs=50, batch_size=4, learning_rate=.01, weight_decay=0, patience=5,
         model_name='SEGG', log_folder='runlogs_segmentation', save=True):
 
     ### Declare network architecture ###
     model = UNet(layers=layers, ft=features).to(device)
     ### Declare loss function & optimizer ###
-    loss_function = nn.BCEWithLogitsLoss().to(device)
+    loss_function = nn.CrossEntropyLoss().to(device)
     optimizer = Adam(model.parameters(), lr=learning_rate, weight_decay=weight_decay)
-
+    #summary(model,(4,1,154,121))
     print('Starting with training...')
     loss_stats = {
         'train': [],
@@ -37,11 +38,11 @@ def train(layers, features, device,
         }
     best_loss = np.inf
     starttime = time.time()
-    for epoch in range(1, num_epochs+1):
+    for epoch in tqdm(range(1, num_epochs+1)):
         model.train().to(device)
         train_epoch_loss = 0
         print(f"Epoch: {epoch}/{num_epochs}")
-        for input_batch, target_batch in tqdm(train_loader):
+        for input_batch, target_batch in train_loader:
             
             # Put batch on GPU
             input_batch = input_batch.to(device)
@@ -50,17 +51,18 @@ def train(layers, features, device,
             
             prediction_batch = model(input_batch)[0].to(device)
             _, _, H, W = prediction_batch.shape
-            print(f'Target bathsize: {target_batch.shape}')
+            #print(f'Target bathsize: {target_batch.shape}')
             target_batch = torchvision.transforms.CenterCrop([H,W])(target_batch)
             
-            print(f'pred bathsize: {prediction_batch.shape}')
-            print(f'Target bathsize: {target_batch.shape}')
-            print(torch.unique(prediction_batch))
+            #print(f'pred bathsize: {prediction_batch.shape}')
+            #print(f'Target bathsize: {target_batch.shape}')
+            #print(torch.unique(prediction_batch))
             #print(target_batch[0,3,:,:])
             # plt.imshow(prediction_batch[0,0,:,:].detach().cpu())
             # plt.show()
-            loss = loss_function(prediction_batch, target_batch) # Compare prediction with target
-            
+            #print(f'prediction:{prediction_batch.shape},target:{target_batch.shape}')
+            loss = loss_function(prediction_batch, target_batch.long()) # Compare prediction with target
+            print(f'trainloss : {loss}')
             loss.backward()
             optimizer.step()
 
@@ -79,7 +81,7 @@ def train(layers, features, device,
                 val_pred = model(val_input_batch)[0].to(device)
                 val_target_batch = torchvision.transforms.CenterCrop([H,W])(val_target_batch)
 
-                val_loss = loss_function(val_pred, val_target_batch)
+                val_loss = loss_function(val_pred, val_target_batch.long())
                 val_epoch_loss += val_loss.item()
 
         # Store the batch-average MSE loss per epoch

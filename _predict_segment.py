@@ -2,10 +2,10 @@ from Segmentationnnn import *
 import matplotlib.pyplot as plt
 import numpy as np
 import json
+from torchsummary import summary
 
 # import nibabel as nib
 # import pathlib
-
 
 ############################# LOADING THE MODEL  #############################
 model_path = "MODELS\SEGG.pth"
@@ -15,11 +15,12 @@ model_path = "MODELS\SEGG.pth"
 # with open(model_runlog, 'r') as RUN:
 #     run = json.load(RUN)
 #     layers, features = run["layers"], run["features"]
-device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+#device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 device = torch.device('cpu')
 torch.cuda.empty_cache()
-model = UNet(4, 16).to(device)
+model = UNet(4, 64).to(device)
 model.load_state_dict(torch.load(model_path))
+#summary(model, (1, 154, 121))
 
 ### LOAD IMAGES & NORMALIZE DATA ###
 def normalize(arr):
@@ -31,17 +32,23 @@ slice_to_predict = torch.from_numpy(np.array(slice_input.copy())).unsqueeze(0).u
 
 ### APPLY MODEL ###
 model.eval()
-slice_prediction = torch.squeeze(model(slice_to_predict)[0]).detach().numpy()[5]
-print(slice_prediction.shape)
-# plot input vs prediction
-fig, axs = plt.subplots(1, 3)
-axs[0].imshow(slice_input, cmap='viridis')
-axs[1].imshow(slice_target, cmap='viridis')
-axs[2].imshow(slice_prediction, cmap='viridis')
+x = model(slice_to_predict)[0]
+#x = torch.squeeze(x).detach().numpy()[5]
+print(x.shape)
+outputmap =np.argmax(x,axis=1)
+# slice_prediction = 
+# print(slice_prediction.shape)
+# # plot input vs prediction
+# fig, axs = plt.subplots(1, 2)
+# axs[0].imshow(slice_input, cmap='viridis')
+# axs[0].imshow(slice_target, cmap='GnBu_r',alpha=.5)
+# axs[1].imshow(slice_prediction, cmap='viridis',alpha=.5)
+# axs[1].imshow(slice_input, cmap='GnBu_r')
 
-axs[0].set_title('Input')
-axs[1].set_title('Target')
-axs[2].set_title('Prediction')
-plt.tight_layout()
-plt.savefig(f'IMAGES/PRED_SAG.png', dpi=200)
-plt.show()
+# axs[0].set_title('Input')
+# axs[1].set_title('Prediction')
+# plt.tight_layout()
+# plt.savefig(f'IMAGES/PRED_SAG.png', dpi=200)
+# plt.show()
+
+

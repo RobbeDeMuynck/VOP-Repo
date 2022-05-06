@@ -21,6 +21,7 @@ import json
 from _load_data import MiceDataset, get_data
 from torch.utils.data import DataLoader
 
+
 path = pathlib.Path(__file__).parent
 
 layers = 4
@@ -50,7 +51,7 @@ def get_data(val_mouse = 5):
             for i in range(ct.shape[-1]):
                 train_input.append(ct[:,:,i])
                 train_target.append(organ[:,:,i])
-            print(f'CT size:{ct.shape}')
+            #print(f'CT size:{ct.shape}')
 
     for mouse in val_names:
         for timestamp in ["024h"]:
@@ -70,13 +71,13 @@ def get_data(val_mouse = 5):
                 val_target.append(organ[:,:,i])
 
     x1,y1,x2,y2 = np.array(train_input), np.array(train_target,dtype=int), np.array(val_input), np.array(val_target,dtype=int)
-    print(x1.shape,y1.shape,x2.shape,y2.shape)
-    print("Data Initialized")
-    print("/n")
-    print("/n")
-    print("/n")
+    # print(x1.shape,y1.shape,x2.shape,y2.shape)
+    # print("Data Initialized")
+    # print("/n")
+    # print("/n")
+    # print("/n")
 
-    print("/n")
+    # print("/n")
     return x1,y1,x2,y2
 
         # with open(path_class) as f:
@@ -85,9 +86,9 @@ def get_data(val_mouse = 5):
         #     # ClassIndices=0|1|2|3|4|5|6|7|8|9|10|11|12
         #     # ClassNames=unclassified|Trachea|Spleen|Bone|Lung|Heart|Stomach|Bladder|Muscle|Tumor|Kidneys|Liver|Intestine
 
-def to_categorical(y, num_classes):
-    """ 1-hot encodes a tensor """
-    return np.eye(num_classes, dtype='uint8')[y]
+# def to_categorical(y, num_classes):
+#     """ 1-hot encodes a tensor """
+#     return np.eye(num_classes, dtype='uint8')[y]
 
 class MiceDataset(Dataset):
     def __init__(self, data_in, target, p=0.5):
@@ -101,7 +102,7 @@ class MiceDataset(Dataset):
 
     def __getitem__(self, index):
         input = self.data_in[index]
-        target = to_categorical(self.target[index],13) #maak er een one-hotencoding van
+        target = self.target[index] #maak er een one-hotencoding van
 
         if torch.rand(1) < self.p:
             input = np.flipud(input)
@@ -110,13 +111,13 @@ class MiceDataset(Dataset):
         if torch.rand(1) < self.p:
             input = np.fliplr(input)
             target = np.fliplr(target)
-        
+
+        #print(f'input dataloader:{input.shape},{target.shape}')
         input = torch.from_numpy(input.copy()).unsqueeze(0).float()
         target = torch.from_numpy(target.copy()).float()
-        target_2 = target.view(target.shape[-1],target.shape[0],target.shape[1])
         #torch.reshape(target,(target.shape[-1],target.shape[0],target.shape[1]))
         
-        return input, target_2
+        return input, target
 
 
 
@@ -139,7 +140,7 @@ class conv_block(nn.Module):
         x = self.relu(x)
         x = self.conv2(x)
         x = self.bn2(x)
-        x = self.relu(x)        
+        x = self.relu(x)
         return x ### Hier geen identity mapping?
 
 class res_block(nn.Module):
@@ -252,7 +253,7 @@ class UNet(nn.Module):
         if self.layers == 3:
             ### Encoder ###
             # Store skip connections in dictionary for later use in decoder
-            print(f'inputsizeUNET: {inputs.shape}')
+            #print(f'inputsizeUNET: {inputs.shape}')
             s1, p1 = self.e1(inputs)
             s2, p2 = self.e2(p1)
             s3, p3 = self.e3(p2)

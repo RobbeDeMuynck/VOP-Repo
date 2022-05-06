@@ -36,7 +36,7 @@ def train(layers, features, device,
         train_epoch_loss = 0
         print(f"Epoch: {epoch}/{num_epochs}")
         for input_batch, target_batch in tqdm(train_loader):
-            
+            print(f'input:{input_batch.shape},target:{target_batch.shape}')
             # Put batch on GPU
             input_batch = input_batch.to(device)
             target_batch = target_batch.to(device)

@@ -35,7 +35,6 @@ torch.cuda.empty_cache()
 model = UNet(layers, features).to(device)
 model.load_state_dict(torch.load(model_path))
 
-
 ### LOAD IMAGES & NORMALIZE DATA ###
 def normalize(arr):
     return (arr-np.mean(arr))/np.std(arr)
