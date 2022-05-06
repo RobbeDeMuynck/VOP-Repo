@@ -1,4 +1,5 @@
 import numpy as np
+from regex import F
 import torch
 from torch.utils.data import Dataset
 import pathlib
@@ -130,8 +131,13 @@ def train(layers, features, device,
                     json.dump(run, file, indent=4)
     return run
 
-
-input, target, val_input, val_target = get_data()
-train_loader = DataLoader(MiceDataset(input, target), batch_size=4, shuffle=True, drop_last=True)
-val_loader = DataLoader(MiceDataset(val_input, val_target), batch_size=4, shuffle=True, drop_last=True)
-train(4,16,device,train_loader,val_loader,model_name='haha',learning_rate=.001,weight_decay=.01)
+lr = [.1,.01,.001,.0001]
+wd = [.1,.01,.001]
+ft = [16,32,64]
+for l in lr:
+    for w in wd:
+        for f in ft:
+            input, target, val_input, val_target = get_data()
+            train_loader = DataLoader(MiceDataset(input, target), batch_size=4, shuffle=True, drop_last=True)
+            val_loader = DataLoader(MiceDataset(val_input, val_target), batch_size=4, shuffle=True, drop_last=True)
+            train(4,f,device,train_loader,val_loader,learning_rate=l,weight_decay=w)
