@@ -10,7 +10,6 @@ import json
 
 ############################# LOADING THE MODEL  #############################
 good = 3, 16, 4, 0.001
-bad = 4, 4, 12, 1e-5 #LYRS=4;FT=4;BS=12;LR=1e-05;WD=0
 
 model_path = "MODELS\LYRS={};FT={};BS={};LR={};WD=0".format(*good) + ".pth"
 model_runlog = "runlogs\LYRS={};FT={};BS={};LR={};WD=0".format(*good) + ".json"
@@ -26,17 +25,28 @@ model.load_state_dict(torch.load(model_path))
 
 
 
-### LOAD IMAGES & NORMALIZE DATA ###
+############################## LOAD IMAGES & NORMALIZE DATA ####################
 def normalize(arr):
     return (arr-np.mean(arr))/np.std(arr)
 
-input, target, val_input, val_target = get_data(plane='transversal', val_mouse=0)
-input, target = normalize(val_input), normalize(val_target)
-to_predict = torch.from_numpy(np.array(input.copy())).unsqueeze(0).unsqueeze(0)
+input_transversal, target_transversal, val_input_transversal,transversal, val_target_transversal = get_data(plane='transversal', val_mouse=0)
+input_transversal, target_transversal = normalize(val_input_transversal), normalize(val_target_transversal)
+to_predict_transversal = torch.from_numpy(np.array(input_transversal.copy())).unsqueeze(0).unsqueeze(0)
+
+input_coronal, target_coronal, val_input_coronal,coronal, val_target_coronal = get_data(plane='coronal', val_mouse=0)
+input_coronal, target_coronal = normalize(val_input_coronal), normalize(val_target_coronal)
+to_predict_coronal = torch.from_numpy(np.array(input_coronal.copy())).unsqueeze(0).unsqueeze(0)
+
+input_sagittal, target_sagittal, val_input_sagittal,sagittal, val_target_sagittal = get_data(plane='sagittal', val_mouse=0)
+input_sagittal, target_sagittal = normalize(val_input_sagittal), normalize(val_target_sagittal)
+to_predict_sagittal = torch.from_numpy(np.array(input_sagittal.copy())).unsqueeze(0).unsqueeze(0)
 
 ### APPLY MODEL ###
 model.eval()
-prediction = torch.squeeze(model(to_predict)[0]).detach().numpy()
+prediction_transversal = torch.squeeze(model(to_predict_transversal)[0]).detach().numpy()
+prediction_coronal = torch.squeeze(model(to_predict_coronal)[0]).detach().numpy()
+prediction_sagittal = torch.squeeze(model(to_predict_sagittal)[0]).detach().numpy()
+
 
 def write_dicom(pixel_array,filename):
     
