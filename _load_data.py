@@ -90,53 +90,53 @@ def get_data(plane='transversal', val_mouse=5):
     ### Loading coronal slices ###
     elif plane=='coronal':
 
-        train_sagittal_001h = []
-        train_sagittal_024h = []
-        for mouse in train_input:
-            for i in range(mouse.shape[1]):
-                train_sagittal_001h.append(mouse[:,i,:])
-        for mouse in train_target:
-            for i in range(mouse.shape[1]):
-                train_sagittal_024h.append(mouse[:,i,:])
-
-        val_sagittal_001h = []
-        val_sagittal_024h = []
-        for mouse in val_input:
-            for i in range(mouse.shape[1]):
-                val_sagittal_001h.append(mouse[:,i,:])
-        for mouse in val_target:
-            for i in range(mouse.shape[1]):
-                 val_sagittal_024h.append(mouse[:,i,:])
-
-        print('Data successfully initialized')
-        return train_sagittal_001h, train_sagittal_024h, val_sagittal_001h, val_sagittal_024h
-        #Train_sagittal_001h (500 slices)
-        #Train_sagittal_024h (500 slices)
-        #val_sagittal_001h  (100 slices)
-        #val_sagittal_024h  (100 slices)
-
-    ### Loading sagittal slices ###
-    elif plane=='sagittal':
-
         train_coronal_001h = []
         train_coronal_024h = []
         for mouse in train_input:
-            for i in range(mouse.shape[0]):
-                train_coronal_001h.append(mouse[i,:,:])
+            for i in range(mouse.shape[1]):
+                train_coronal_001h.append(mouse[:,i,:])
         for mouse in train_target:
-            for i in range(mouse.shape[0]):
-                train_coronal_024h.append(mouse[i,:,:])
+            for i in range(mouse.shape[1]):
+                train_coronal_024h.append(mouse[:,i,:])
 
         val_coronal_001h = []
         val_coronal_024h = []
         for mouse in val_input:
-            for i in range(mouse.shape[0]):
-                val_coronal_001h.append(mouse[i,:,:])
-        for mouse in train_target:
-            for i in range(mouse.shape[0]):
-                val_coronal_024h.append(mouse[i,:,:])
+            for i in range(mouse.shape[1]):
+                val_coronal_001h.append(mouse[:,i,:])
+        for mouse in val_target:
+            for i in range(mouse.shape[1]):
+                 val_coronal_024h.append(mouse[:,i,:])
+
         print('Data successfully initialized')
         return train_coronal_001h, train_coronal_024h, val_coronal_001h, val_coronal_024h
+        #Train_coronal_001h (500 slices)
+        #Train_coronal_024h (500 slices)
+        #val_coronal_001h  (100 slices)
+        #val_coronal_024h  (100 slices)
+
+    ### Loading sagittal slices ###
+    elif plane=='sagittal':
+
+        train_sagittal_001h = []
+        train_sagittal_024h = []
+        for mouse in train_input:
+            for i in range(mouse.shape[0]):
+                train_sagittal_001h.append(mouse[i,:,:])
+        for mouse in train_target:
+            for i in range(mouse.shape[0]):
+                train_sagittal_024h.append(mouse[i,:,:])
+
+        val_sagittal_001h = []
+        val_sagittal_024h = []
+        for mouse in val_input:
+            for i in range(mouse.shape[0]):
+                val_sagittal_001h.append(mouse[i,:,:])
+        for mouse in val_target:
+            for i in range(mouse.shape[0]):
+                val_sagittal_024h.append(mouse[i,:,:])
+        print('Data successfully initialized')
+        return train_sagittal_001h, train_sagittal_024h, val_sagittal_001h, val_sagittal_024h
 
     print('Data loading failed')
     return None
