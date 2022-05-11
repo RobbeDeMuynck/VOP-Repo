@@ -33,8 +33,8 @@ model.load_state_dict(torch.load(model_path))
 ### LOAD IMAGES & NORMALIZE DATA ###
 def normalize(arr):
     return (arr-np.mean(arr))/np.std(arr)
-input, target, val_input, val_target = get_data(plane='coronal', val_mouse=5)
-ind = len(val_input)//2-12
+input, target, val_input, val_target = get_data(plane='sagittal', val_mouse=5)
+ind = len(val_input)//2-10
 slice_input, slice_target = normalize(val_input[ind]), normalize(val_target[ind])
 slice_to_predict = torch.from_numpy(np.array(slice_input.copy())).unsqueeze(0).unsqueeze(0)
 
@@ -152,3 +152,23 @@ plt.show()
 # plt.title('After')
 # plt.imshow(IMG_after)
 # plt.show()
+
+############################### sagittal in vertical #########################
+fig, axs = plt.subplots(3,1)
+axs[0].imshow(slice_input, cmap='viridis')
+axs[1].imshow(slice_target, cmap='viridis')
+axs[2].imshow(slice_prediction, cmap='viridis')
+
+axs[0].imshow(slice_input, cmap='bone')
+axs[1].imshow(slice_target, cmap='bone')
+axs[2].imshow(slice_prediction, cmap='bone')
+
+axs[0].set_title('Before injection')
+axs[0].axis('off')
+axs[1].set_title('24 hours after injection with contrast enhancement')
+axs[1].axis('off')
+axs[2].set_title('Model prediction')
+axs[2].axis('off')
+plt.tight_layout()
+# plt.savefig(f'IMAGES/PRED_SAG.png', dpi=200)
+plt.show()
