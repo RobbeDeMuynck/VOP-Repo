@@ -64,10 +64,10 @@ def train(layers, features, device,
             # plt.show()
             #print(f'prediction:{prediction_batch.shape},target:{target_batch.shape}')
             loss = loss_function(prediction_batch, target_batch.long()) # Compare prediction with target
-            print(f'trainloss : {loss}')
+            #print(f'trainloss : {loss}')
             loss.backward()
             optimizer.step()
-
+            
             train_epoch_loss += loss.item()
             input_batch = torchvision.transforms.CenterCrop([H,W])(input_batch)
         
@@ -84,6 +84,7 @@ def train(layers, features, device,
                 val_target_batch = torchvision.transforms.CenterCrop([H,W])(val_target_batch)
 
                 val_loss = loss_function(val_pred, val_target_batch.long())
+                print(f"val_los: {val_loss}")
                 val_epoch_loss += val_loss.item()
 
         # Store the batch-average MSE loss per epoch
@@ -133,12 +134,12 @@ def train(layers, features, device,
     return run
 
 lr = [.001]
-wd = [.01]
-ft = [16]
+wd = [0.1]
+ft = [32]
 for l in lr:
     for w in wd:
         for f in ft:
             input, target, val_input, val_target = get_data()
             train_loader = DataLoader(MiceDataset(input, target), batch_size=4, shuffle=True, drop_last=True)
             val_loader = DataLoader(MiceDataset(val_input, val_target), batch_size=4, shuffle=True, drop_last=True)
-            train(4,f,device,train_loader,val_loader,learning_rate=l,weight_decay=w)
+            train(4,f,device,train_loader,val_loader,learning_rate=l,batch_size=4,weight_decay=w)

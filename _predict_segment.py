@@ -5,7 +5,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 import json
 from torchsummary import summary
-from mpl_toolkits.axes_grid1 import make_axes_locatable
+import seaborn as sns
+
+#from mpl_toolkits.axes_grid1 import make_axes_locatable
 
 # import nibabel as nib
 # import pathlib
@@ -31,7 +33,7 @@ def normalize(arr):
     return (arr-np.mean(arr))/np.std(arr)
 
 input, target, val_input, val_target = get_data(val_mouse=5)
-ind = 150
+ind = 122
 slice_input, slice_target = normalize(val_input[ind]), normalize(val_target[ind])
 print('gelukt')
 
@@ -55,6 +57,9 @@ print(f'maskshape:{x.shape}')
 
 slice_prediction =np.argmax(x,axis=0)
 
+
+
+
 # plot input vs prediction
 fig, axs = plt.subplots(1, 1)
 
@@ -63,12 +68,12 @@ fig, axs = plt.subplots(1, 1)
 # axs[0].imshow(slice_target, cmap='viridis',alpha=.8)
 axs.imshow(slice_to_predict,cmap='bone')
 
-seg = axs.imshow(slice_prediction, cmap='viridis',alpha=.8)
-divider = make_axes_locatable(axs[1])
-cax = divider.append_axes('right')
+axs.imshow(slice_prediction, cmap='viridis',alpha=.6)
+# divider = make_axes_locatable(axs[1])
+# cax = divider.append_axes('right')
 
-fig.colorbar(seg, cax = cax)
-axs.add
+# fig.colorbar(seg, cax = cax)
+# axs.add
 
 
 #axs[0].set_title('Input')
