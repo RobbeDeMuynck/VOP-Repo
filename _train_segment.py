@@ -28,6 +28,7 @@ def train(layers, features, device,
     model_name = f'SEGG_layers{layers}_lr{learning_rate}_wd{weight_decay}_ft{features}'
     ### Declare network architecture ###
     model = UNet(layers=layers, ft=features).to(device)
+    #summary(model,)
     ### Declare loss function & optimizer ###
     loss_function = nn.CrossEntropyLoss().to(device)
     optimizer = Adam(model.parameters(), lr=learning_rate, weight_decay=weight_decay)
@@ -131,9 +132,9 @@ def train(layers, features, device,
                     json.dump(run, file, indent=4)
     return run
 
-lr = [.1,.01,.001,.0001]
-wd = [.1,.01,.001]
-ft = [16,32,64]
+lr = [.001]
+wd = [.01]
+ft = [16]
 for l in lr:
     for w in wd:
         for f in ft:
