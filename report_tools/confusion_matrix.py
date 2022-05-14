@@ -65,7 +65,7 @@ def plot_examples(colormap):
     Helper function to plot data with associated colormap.
     """
     np.random.seed(19680801)
-    data = np.random.randn(0, 12)
+    data = np.random.randn(12, 12)
     fig, axs = plt.subplots(1, 1, figsize=(1 * 2 + 2, 3), constrained_layout=True)
     psm = axs.pcolormesh(data, cmap=colormap, rasterized=True)
     fig.colorbar(psm, ax=axs)
