@@ -145,39 +145,3 @@ def get_data(plane='sagittal', val_mice=[], test_mice=[]):
     test_input, test_target = np.array(test_input), np.array(test_target, dtype=int)
 
     return train_input, train_target, val_input, val_target, test_input, test_target
-
-train_input, train_target, val_input, val_target, test_input, test_target = get_data(plane='sagittal', val_mice=[15, 16, 17], test_mice=[18, 19, 20])
-
-# PLOT
-idx = 140+70
-ct, organ = val_input[idx], val_target[idx] 
-
-
-cmap = cm.get_cmap('Set3')
-RGBA = [(0, 0, 0, 0)]+[tuple(list(RGB)+[1]) for RGB in cmap.colors]
-cmap = matplotlib.colors.ListedColormap(RGBA)
-
-fig, axs = plt.subplots(1, 1, figsize=(4, 3), constrained_layout=True)
-axs.imshow(ct, cmap='bone')
-psm = axs.imshow(organ, cmap=cmap, alpha=.5, vmin=-0.5, vmax=12.5)
-fig.colorbar(psm, ax=axs)
-
-# Add legend patches
-ClassNames = {
-        0: 'unclassified',
-        1: 'Heart',
-        2: 'Lung',
-        3: 'Liver',
-        4: 'Intestine',
-        5: 'Spleen',
-        6: 'Muscle',
-        7: 'Stomach',
-        8: 'Bladder',
-        9: 'Bone',
-        10: 'Kidneys',
-        11: 'Trachea',
-        12: 'Tumor'
-    }
-legend_elements = [Patch(facecolor=rgba, label=ClassNames[i+1]) for i, rgba in enumerate(RGBA[1:])]
-axs.legend(handles=legend_elements, loc='upper center', bbox_to_anchor=(0.5, -0.05), ncol=6)
-plt.show()
