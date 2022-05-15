@@ -17,9 +17,9 @@ from tqdm import tqdm
 from torch.autograd import Variable
 import time
 import json
-from Segmentationnnn import *
-# from load_data_segmentation import MiceDataset, get_data
-# from UNET_segmentation import UNet
+#from Segmentationnnn import *
+from load_data_segmentation import MiceDataset, get_data
+from UNET_segmentation import UNet
 from torch.utils.data import DataLoader
 # from torchsummary import summary
 
@@ -151,12 +151,12 @@ torch.cuda.empty_cache()
 lr = [0.001]
 wd = [0]
 ft = [12]
-ly = 3
+ly = 4
 for l in lr:
     for w in wd:
         for f in ft:
-            # train_input, train_target, val_input, val_target, test_input, test_target = get_data(plane='sagittal', val_mice=[15, 16, 17], test_mice=[18, 19, 20])
-            train_input, train_target, val_input, val_target = get_data()
+            train_input, train_target, val_input, val_target, test_input, test_target = get_data(plane='sagittal', val_mice=[15, 16, 17], test_mice=[18, 19, 20])
+            #train_input, train_target, val_input, val_target = get_data()
             train_loader = DataLoader(MiceDataset(train_input, train_target), batch_size=4, shuffle=True, drop_last=True)
             val_loader = DataLoader(MiceDataset(val_input, val_target), batch_size=4, shuffle=True, drop_last=True)
             train(ly, f, device,

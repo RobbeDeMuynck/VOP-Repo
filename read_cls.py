@@ -146,6 +146,10 @@ def get_data(plane='sagittal', val_mice=[], test_mice=[]):
 
     return train_input, train_target, val_input, val_target, test_input, test_target
 
+
+
+
+
 train_input, train_target, val_input, val_target, test_input, test_target = get_data(plane='sagittal', val_mice=[15, 16, 17], test_mice=[18, 19, 20])
 
 # PLOT

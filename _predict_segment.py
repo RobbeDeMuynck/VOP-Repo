@@ -13,7 +13,7 @@ import seaborn as sns
 # import pathlib
 
 ############################# LOADING THE MODEL  #############################
-model_path = "MODELS/LargeSeg_layers4_lr0.01_wd0.001_ft16.pth"
+model_path = "MODELS/LargeSeg_layers4_lr0.001_wd0_ft12.pth"
 # model_path = "MODELS\BS=8;LR=0.001;WD=0.09;FT=4.pth"
 # model_runlog = "runlogs\LYRS=3;FT=12;BS=4;LR=0.005;WD=0.json"
 
@@ -23,7 +23,7 @@ model_path = "MODELS/LargeSeg_layers4_lr0.01_wd0.001_ft16.pth"
 #device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 device = torch.device('cpu')
 #torch.cuda.empty_cache()
-model = UNet(3, 16).to(device)
+model = UNet(4, 12).to(device)
 model.load_state_dict(torch.load(model_path))
 
 H,W = 128,96
@@ -31,6 +31,7 @@ H,W = 128,96
 ### LOAD IMAGES & NORMALIZE DATA ###
 def normalize(arr):
     return (arr-np.mean(arr))/np.std(arr)
+#train_input, train_target, val_input, val_target, test_input, test_target = get_data(plane='sagittal', val_mice=[15, 16, 17], test_mice=[18, 19, 20])
 
 input, target, val_input, val_target = get_data(val_mouse=5)
 ind = 100

@@ -108,7 +108,7 @@ class UNet(nn.Module):
             self.d3 = decoder_block(2*ft,ft)
 
             ### Last layer: mapping to prediction ###
-            self.outputs = nn.Conv2d(ft, 1, kernel_size=1, padding=0)
+            self.outputs = nn.Conv2d(ft, 13, kernel_size=1, padding=0)
         elif layers == 4:
             ### Encoder ###
             self.e1 = encoder_block(1, ft)
