@@ -85,7 +85,7 @@ def train(layers, features, device,
                 val_target_batch = torchvision.transforms.CenterCrop([H,W])(val_target_batch)
 
                 val_loss = loss_function(val_pred, val_target_batch.long())
-                print(f"val_los: {val_loss}")
+                # print(f"val_los: {val_loss}")
                 val_epoch_loss += val_loss.item()
 
         # Store the batch-average MSE loss per epoch
@@ -161,6 +161,6 @@ for l in lr:
             val_loader = DataLoader(MiceDataset(val_input, val_target), batch_size=4, shuffle=True, drop_last=True)
             train(ly, f, device,
                 train_loader, val_loader,
-                num_epochs=50, batch_size=4, learning_rate=l, weight_decay=w, patience=5,
+                num_epochs=120, batch_size=4, learning_rate=l, weight_decay=w, patience=5,
                 model_name='SEGMENT_3lyrs_12fts', log_folder='runlogs_segmentation', save=True)
 
