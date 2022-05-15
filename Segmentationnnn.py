@@ -34,8 +34,10 @@ def get_data(val_mouse = 5):
     val_input, val_target = [],[]
     mice = ["M01", "M02","M03", "M04", "M05", "M06", "M07","M08","M09", "M10", "M11", "M12","M13", "M14", "M15", "M16", "M17","M18","M19", "M20"]
     #
-    train_names = ["M01","M03", "M04", "M05", "M06", "M07","M08","M09", "M11", "M12","M13", "M14", "M15", "M16", "M17","M18","M19"]
-    val_names = [ "M02" ,"M10","M20"]
+    # train_names = ["M01","M03", "M04", "M05", "M06", "M07","M08","M09", "M11", "M12","M13", "M14", "M15", "M16", "M17","M18","M19"]
+    # val_names = [ "M02" ,"M10","M20"]
+    train_names = ["M03", "M04", "M05", "M06", "M07"]
+    val_names = ["M08"]
     for mouse in train_names:
         for timestamp in ["024h"]:
             path_ct = path / f"data_segmentation/{mouse}_{timestamp}/CT280.img"

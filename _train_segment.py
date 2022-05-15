@@ -134,7 +134,7 @@ def train(layers, features, device,
 
 lr = [0.01]
 wd = [.01]
-ft = [8]
+ft = [16]
 for l in lr:
     for w in wd:
         for f in ft:
