@@ -23,7 +23,7 @@ from torchsummary import summary
 
 def train(layers, features, device,
         train_loader, val_loader,
-        num_epochs=50, batch_size=4, learning_rate=.01, weight_decay=0, patience=10,
+        num_epochs=50, batch_size=4, learning_rate=.01, weight_decay=0, patience=3,
         model_name='SEGG16_00', log_folder='runlogs_segmentation', save=True):
     model_name = f'LargeSeg_layers{layers}_lr{learning_rate}_wd{weight_decay}_ft{features}'
     ### Declare network architecture ###
@@ -132,9 +132,9 @@ def train(layers, features, device,
                     json.dump(run, file, indent=4)
     return run
 
-lr = [0.1]
-wd = [.5]
-ft = [16]
+lr = [0.01]
+wd = [.01]
+ft = [8]
 for l in lr:
     for w in wd:
         for f in ft:
