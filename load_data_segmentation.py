@@ -37,12 +37,30 @@ class MiceDataset(Dataset):
 
 ################################## GET PROCESSED DATA ##################################
 def get_data(plane='sagittal', val_mice=[], test_mice=[]):
+
     train_input, train_target = [], []
     val_input, val_target = [], []
     test_input, test_target = [], []
 
     mice = ["M01", "M02","M03", "M04", "M05", "M06", "M07","M08","M09", "M10", "M11", "M12","M13", "M14", "M15", "M16", "M17","M18","M19", "M20"]
     path = pathlib.Path(__file__).parent
+
+    # 
+    ClassNames = {
+        0: 'unclassified',
+        1: 'Heart',
+        2: 'Lung',
+        3: 'Liver',
+        4: 'Intestine',
+        5: 'Spleen',
+        6: 'Muscle',
+        7: 'Stomach',
+        8: 'Bladder',
+        9: 'Bone',
+        10: 'Kidneys',
+        11: 'Trachea',
+        12: 'Tumor'
+    }
 
     for i, mouse in enumerate(mice):
         # Declare path to data of each mouse
