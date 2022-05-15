@@ -137,14 +137,15 @@ def train(layers, features, device,
 
 ### TRAIN SEGMENTATION MODEL ###
 # Declare device
-def force_cudnn_initialization():
-    s = 32
-    dev = torch.device('cuda')
-    torch.nn.functional.conv2d(torch.zeros(s, s, s, s, device=dev), torch.zeros(s, s, s, s, device=dev))
+# def force_cudnn_initialization():
+#     s = 32
+#     dev = torch.device('cuda')
+#     torch.nn.functional.conv2d(torch.zeros(s, s, s, s, device=dev), torch.zeros(s, s, s, s, device=dev))
+# force_cudnn_initialization()
 
-force_cudnn_initialization()
 # device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 # torch.cuda.empty_cache()
+device = torch.device('cpu')
 
 # Declare training parameters & network architecture
 lr = [0.001]
