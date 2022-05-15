@@ -1,5 +1,5 @@
 from sklearn.preprocessing import OrdinalEncoder
-from torch import slice_scatter
+# from torch import slice_scatter
 from Segmentationnnn import *
 import matplotlib.pyplot as plt
 import numpy as np
@@ -26,7 +26,7 @@ device = torch.device('cpu')
 model = UNet(4, 16).to(device)
 model.load_state_dict(torch.load(model_path))
 
-H,W = 144, 112
+H, W = 144, 112
 
 ### LOAD IMAGES & NORMALIZE DATA ###
 def normalize(arr):
