@@ -5,7 +5,12 @@ import pathlib
 import nibabel as nib
 from tqdm import tqdm
 
+import matplotlib
 import matplotlib.pyplot as plt
+import matplotlib.cm as cm
+from matplotlib.patches import Patch
+
+# from report_tools.confusion_matrix import ClassNames
 
 ################################## DECLARING THE DATASET  ##################################
 class MiceDataset(Dataset):
@@ -40,7 +45,7 @@ class MiceDataset(Dataset):
 def mapping(old_organ, dict):
     # old_organ: 3D
     I, J, K = old_organ.shape
-    new_organ = old_organ.copy()
+    new_organ = np.zeros((I, J, K))
     for i in range(I):
         for j in range(J):
             for k in range(K):
@@ -103,17 +108,18 @@ def get_data(plane='sagittal', val_mice=[], test_mice=[]):
         #     ct, organ = ct[:140, :102, :194], organ[:140, :102, :194]
 
         # Standardized index of organ segmentation
-        # with open(path_class) as f:
-        #     content = f.read()
-        #     indices = content.split('\n')[1].split('=')[1].split('|')
-        #     names = content.split('\n')[2].split('=')[1].split('|')
-        #     dict = {int(idx): name for idx, name in zip(indices, names)}
+        with open(path_class) as f:
+            content = f.read()
+            indices = content.split('\n')[1].split('=')[1].split('|')
+            names = content.split('\n')[2].split('=')[1].split('|')
+            dict = {int(idx): name for idx, name in zip(indices, names)}
         
-        #     mapping_old_to_standard = {}
-        #     for old_idx, old_name in dict.items():
-        #         mapping_old_to_standard[old_idx] = name_to_idx_standard[old_name]
-        #     print(mapping_old_to_standard)
-        #     organ = mapping(organ, mapping_old_to_standard)
+            mapping_old_to_standard = {}
+            for old_idx, old_name in dict.items():
+                mapping_old_to_standard[old_idx] = name_to_idx_standard[old_name]
+            
+            organ = mapping(organ, mapping_old_to_standard)
+            print(mapping_old_to_standard)
 
         # Append each mouse to
         if i+1 in val_mice:
@@ -145,6 +151,33 @@ train_input, train_target, val_input, val_target, test_input, test_target = get_
 # PLOT
 idx = 140+70
 ct, organ = val_input[idx], val_target[idx] 
-plt.imshow(ct, cmap='bone')
-plt.imshow(organ, cmap='Paired',alpha=.5)
+
+
+cmap = cm.get_cmap('Set3')
+RGBA = [(0, 0, 0, 0)]+[tuple(list(RGB)+[1]) for RGB in cmap.colors]
+cmap = matplotlib.colors.ListedColormap(RGBA)
+
+fig, axs = plt.subplots(1, 1, figsize=(4, 3), constrained_layout=True)
+axs.imshow(ct, cmap='bone')
+psm = axs.imshow(organ, cmap=cmap, alpha=.5, vmin=-0.5, vmax=12.5)
+fig.colorbar(psm, ax=axs)
+
+# Add legend patches
+ClassNames = {
+        0: 'unclassified',
+        1: 'Heart',
+        2: 'Lung',
+        3: 'Liver',
+        4: 'Intestine',
+        5: 'Spleen',
+        6: 'Muscle',
+        7: 'Stomach',
+        8: 'Bladder',
+        9: 'Bone',
+        10: 'Kidneys',
+        11: 'Trachea',
+        12: 'Tumor'
+    }
+legend_elements = [Patch(facecolor=rgba, label=ClassNames[i+1]) for i, rgba in enumerate(RGBA[1:])]
+axs.legend(handles=legend_elements, loc='upper center', bbox_to_anchor=(0.5, -0.05), ncol=6)
 plt.show()

@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 import matplotlib
 import matplotlib.pyplot as plt
+import matplotlib.cm as cm
 import seaborn as sns
 from sklearn.metrics import confusion_matrix
 
@@ -92,4 +93,10 @@ def plot_examples(colormap):
     fig.colorbar(psm, ax=axs)
     plt.show()
 
-# plot_examples(mycm)
+cmap = cm.get_cmap('Set3')
+RGBA = [(0, 0, 0, 0)]+[tuple(list(RGB)+[1]) for RGB in cmap.colors]
+cmap = matplotlib.colors.ListedColormap(RGBA)
+print(RGBA)
+
+# plot_examples(cmap)
+
