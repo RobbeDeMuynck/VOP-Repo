@@ -5,10 +5,10 @@ import pathlib
 import nibabel as nib
 from tqdm import tqdm
 
-import matplotlib
-import matplotlib.pyplot as plt
-import matplotlib.cm as cm
-from matplotlib.patches import Patch
+# import matplotlib
+# import matplotlib.pyplot as plt
+# import matplotlib.cm as cm
+# from matplotlib.patches import Patch
 
 # from report_tools.confusion_matrix import ClassNames
 
@@ -80,6 +80,7 @@ def get_data(plane='sagittal', val_mice=[], test_mice=[]):
     name_to_idx_standard = {val: key for key, val in ClassNames.items()}
 
     # Add each mouse
+    print('Loading data & standardizing index of organ segmentation masks...')
     for i, mouse in tqdm(enumerate(mice)):
         # Declare path to data of each mouse
         timestamp = "024h"
@@ -119,7 +120,7 @@ def get_data(plane='sagittal', val_mice=[], test_mice=[]):
                 mapping_old_to_standard[old_idx] = name_to_idx_standard[old_name]
             
             organ = mapping(organ, mapping_old_to_standard)
-            print(mapping_old_to_standard)
+            # print(mapping_old_to_standard)
 
         # Append each mouse to
         if i+1 in val_mice:
@@ -144,4 +145,5 @@ def get_data(plane='sagittal', val_mice=[], test_mice=[]):
     val_input, val_target = np.array(val_input), np.array(val_target, dtype=int)
     test_input, test_target = np.array(test_input), np.array(test_target, dtype=int)
 
+    print('Data successfully initialized')
     return train_input, train_target, val_input, val_target, test_input, test_target

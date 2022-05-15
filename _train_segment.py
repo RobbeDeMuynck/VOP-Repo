@@ -18,8 +18,10 @@ from torch.autograd import Variable
 import time
 import json
 from Segmentationnnn import *
+# from load_data_segmentation import MiceDataset, get_data
+# from UNET_segmentation import UNet
 from torch.utils.data import DataLoader
-from torchsummary import summary
+# from torchsummary import summary
 
 def train(layers, features, device,
         train_loader, val_loader,
@@ -132,14 +134,32 @@ def train(layers, features, device,
                     json.dump(run, file, indent=4)
     return run
 
-lr = [0.01]
-wd = [.01]
-ft = [16]
+
+### TRAIN SEGMENTATION MODEL ###
+# Declare device
+def force_cudnn_initialization():
+    s = 32
+    dev = torch.device('cuda')
+    torch.nn.functional.conv2d(torch.zeros(s, s, s, s, device=dev), torch.zeros(s, s, s, s, device=dev))
+
+force_cudnn_initialization()
+# device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+# torch.cuda.empty_cache()
+
+# Declare training parameters & network architecture
+lr = [0.001]
+wd = [0]
+ft = [12]
+ly = 3
 for l in lr:
     for w in wd:
         for f in ft:
-            input, target, val_input, val_target = get_data()
-            train_loader = DataLoader(MiceDataset(input, target), batch_size=4, shuffle=True, drop_last=True)
+            # train_input, train_target, val_input, val_target, test_input, test_target = get_data(plane='sagittal', val_mice=[15, 16, 17], test_mice=[18, 19, 20])
+            train_input, train_target, val_input, val_target = get_data()
+            train_loader = DataLoader(MiceDataset(train_input, train_target), batch_size=4, shuffle=True, drop_last=True)
             val_loader = DataLoader(MiceDataset(val_input, val_target), batch_size=4, shuffle=True, drop_last=True)
-            train(4,f,device,train_loader,val_loader,learning_rate=l,batch_size=4,weight_decay=w)
+            train(ly, f, device,
+                train_loader, val_loader,
+                num_epochs=50, batch_size=4, learning_rate=l, weight_decay=w, patience=5,
+                model_name='SEGMENT_3lyrs_12fts', log_folder='runlogs_segmentation', save=True)
 
