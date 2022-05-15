@@ -21,7 +21,6 @@ import json
 from _load_data import MiceDataset, get_data
 from torch.utils.data import DataLoader
 
-
 path = pathlib.Path(__file__).parent
 
 # layers = 4
@@ -33,44 +32,47 @@ torch.cuda.empty_cache()
 def get_data(val_mouse = 5):
     train_input, train_target = [],[]
     val_input, val_target = [],[]
-    mice = ["M03", "M04", "M05", "M06", "M07","M08"]
-    train_names = [mouse for i, mouse in enumerate(mice) if i!= val_mouse]
-    val_names = [mouse for i, mouse in enumerate(mice) if i == val_mouse]
+    mice = ["M01", "M02","M03", "M04", "M05", "M06", "M07","M08","M09", "M10", "M11", "M12","M13", "M14", "M15", "M16", "M17","M18","M19", "M20"]
+    #
+    train_names = ["M01","M03", "M04", "M05", "M06", "M07","M08","M09", "M11", "M12","M13", "M14", "M15", "M16", "M17","M18","M19"]
+    val_names = [ "M02" ,"M10","M20"]
     for mouse in train_names:
         for timestamp in ["024h"]:
-            path_ct = path / f"original/{mouse}_{timestamp}/CT280.img"
-            path_organ = path / f"original/{mouse}_{timestamp}/Organ_280.img"
-            path_class = path / f"original/{mouse}_{timestamp}/Organ_280.cls"
+            path_ct = path / f"data_segmentation/{mouse}_{timestamp}/CT280.img"
+            path_organ = path / f"data_segmentation/{mouse}_{timestamp}/Organ.img"
+            path_class = path / f"data_segmentation/{mouse}_{timestamp}/Organ.cls"
             if not path_organ.is_file():
-                path_organ = path / f"original/{mouse}_{timestamp}/Organ1_280.img"
+                path_organ = path / f"data_segmentation/{mouse}_{timestamp}/Organ1.img"
             if not path_class.is_file():
-                path_class = path / f"original/{mouse}_{timestamp}/Organ1_280.cls"
+                path_class = path / f"data_segmentation/{mouse}_{timestamp}/Organ1.cls"
             
             ct = nib.load(path_ct).get_fdata()
             organ = nib.load(path_organ).get_fdata()
             for i in range(ct.shape[-1]):
-                train_input.append(ct[:,:,i])
-                train_target.append(organ[:,:,i])
+                train_input.append(ct[:140,:102,i])
+                train_target.append(organ[:140,:102,i])
             #print(f'CT size:{ct.shape}')
 
     for mouse in val_names:
         for timestamp in ["024h"]:
-            path_ct = path / f"original/{mouse}_{timestamp}/CT280.img"
-            path_organ = path / f"original/{mouse}_{timestamp}/Organ_280.img"
-            path_class = path / f"original/{mouse}_{timestamp}/Organ_280.cls"
+            path_ct = path / f"data_segmentation/{mouse}_{timestamp}/CT280.img"
+            path_organ = path / f"data_segmentation/{mouse}_{timestamp}/Organ.img"
+            path_class = path / f"data_segmentation/{mouse}_{timestamp}/Organ.cls"
             if not path_organ.is_file():
-                path_organ = path / f"original/{mouse}_{timestamp}/Organ1_280.img"
+                path_organ = path / f"data_segmentation/{mouse}_{timestamp}/Organ1.img"
             if not path_class.is_file():
-                path_class = path / f"original/{mouse}_{timestamp}/Organ1_280.cls"
+                path_class = path / f"data_segmentation/{mouse}_{timestamp}/Organ1.cls"
 
             ct = nib.load(path_ct).get_fdata()
-
+            print(f'ct:{ct.shape}')
             organ = nib.load(path_organ).get_fdata()
+            print(f'target:{organ.shape}')
             for i in range(ct.shape[-1]):
-                val_input.append(ct[:,:,i])
-                val_target.append(organ[:,:,i])
-
+                val_input.append(ct[:140,:102,i])
+                val_target.append(organ[:140,:102,i])
+                #print(len(train_input),len(train_target),len(val_input),len(val_target))
     x1,y1,x2,y2 = np.array(train_input), np.array(train_target,dtype=int), np.array(val_input), np.array(val_target,dtype=int)
+    
     # print(x1.shape,y1.shape,x2.shape,y2.shape)
     # print("Data Initialized")
     # print("/n")
@@ -118,8 +120,6 @@ class MiceDataset(Dataset):
         #torch.reshape(target,(target.shape[-1],target.shape[0],target.shape[1]))
         
         return input, target
-
-
 
 ##################################### DEFINING BUILDING BLOCKS  ##################################
 class conv_block(nn.Module):

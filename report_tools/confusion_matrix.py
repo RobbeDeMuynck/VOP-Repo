@@ -45,8 +45,29 @@ ClassColors = {
 
 def CM_plot(target, prediction):
     '''target, prediction: 3D organs mask matrices (0-12)'''
-    ### Calculate confusion matrix
-    conf_matrix = confusion_matrix(target, prediction)
+    ### Check dimensions
+    assert target.shape == prediction.shape, f'Shapes {target.shape} and {prediction.shape} do not match!'
+    ### Calculate confusion 
+    target, prediction = target.flatten(), prediction.flatten()
+    cm = confusion_matrix(target, prediction, labels=[i for i in range(13)], normalize='true')
+    ### Create dataframe and plot confusion matrix
+    cm_df = pd.DataFrame(cm,
+                        index = [ClassNames[idx] for idx in range(13)],
+                        columns = [ClassNames[idx] for idx in range(13)])
+    # print(cm_df.head())
+    plt.figure(figsize=(8, 8))
+    sns.set_theme(style="white", font_scale = 1.25)
+    g = sns.heatmap(cm_df, annot=True, fmt='.1f', cmap='Blues')
+    # plot.set_title('Confusion Matrix')
+    # plot.set_ylabel('Actual organ')
+    # plot.set_xlabel('Predicted organ')
+    plt.title('Confusion Matrix', fontsize=20, pad=10)
+    plt.ylabel('Actual organ')
+    plt.xlabel('Predicted organ', labelpad=10)
+    plt.xticks(rotation=45)
+    plt.tight_layout()
+    plt.show()
+
 
 ### Generate plot
 sns.set_theme(style="white", font_scale = 1.25)
@@ -62,13 +83,13 @@ mycm = matplotlib.colors.ListedColormap(RGBA)
 
 def plot_examples(colormap):
     """
-    Helper function to plot data with associated colormap.
+    Help function to plot data with associated colormap.
     """
     np.random.seed(19680801)
-    data = np.random.randn(0, 12)
+    data = np.random.randn(12, 12)
     fig, axs = plt.subplots(1, 1, figsize=(1 * 2 + 2, 3), constrained_layout=True)
     psm = axs.pcolormesh(data, cmap=colormap, rasterized=True)
     fig.colorbar(psm, ax=axs)
     plt.show()
 
-plot_examples(mycm)
+# plot_examples(mycm)

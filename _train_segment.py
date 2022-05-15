@@ -23,9 +23,9 @@ from torchsummary import summary
 
 def train(layers, features, device,
         train_loader, val_loader,
-        num_epochs=50, batch_size=4, learning_rate=.01, weight_decay=0, patience=5,
+        num_epochs=50, batch_size=4, learning_rate=.01, weight_decay=0, patience=10,
         model_name='SEGG16_00', log_folder='runlogs_segmentation', save=True):
-    model_name = f'SEGG_layers{layers}_lr{learning_rate}_wd{weight_decay}_ft{features}'
+    model_name = f'LargeSeg_layers{layers}_lr{learning_rate}_wd{weight_decay}_ft{features}'
     ### Declare network architecture ###
     model = UNet(layers=layers, ft=features).to(device)
     #summary(model,)
@@ -40,11 +40,11 @@ def train(layers, features, device,
         }
     best_loss = np.inf
     starttime = time.time()
-    for epoch in tqdm(range(1, num_epochs+1)):
+    for epoch in range(1, num_epochs+1):
         model.train().to(device)
         train_epoch_loss = 0
         print(f"Epoch: {epoch}/{num_epochs}")
-        for input_batch, target_batch in train_loader:
+        for input_batch, target_batch in tqdm(train_loader):
             
             # Put batch on GPU
             input_batch = input_batch.to(device)
@@ -67,7 +67,6 @@ def train(layers, features, device,
             #print(f'trainloss : {loss}')
             loss.backward()
             optimizer.step()
-            
             train_epoch_loss += loss.item()
             input_batch = torchvision.transforms.CenterCrop([H,W])(input_batch)
         
@@ -133,9 +132,9 @@ def train(layers, features, device,
                     json.dump(run, file, indent=4)
     return run
 
-lr = [.001]
-wd = [0.1]
-ft = [32]
+lr = [0.1]
+wd = [.5]
+ft = [16]
 for l in lr:
     for w in wd:
         for f in ft:
@@ -143,3 +142,4 @@ for l in lr:
             train_loader = DataLoader(MiceDataset(input, target), batch_size=4, shuffle=True, drop_last=True)
             val_loader = DataLoader(MiceDataset(val_input, val_target), batch_size=4, shuffle=True, drop_last=True)
             train(4,f,device,train_loader,val_loader,learning_rate=l,batch_size=4,weight_decay=w)
+

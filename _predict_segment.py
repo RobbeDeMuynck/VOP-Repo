@@ -1,5 +1,5 @@
 from sklearn.preprocessing import OrdinalEncoder
-from torch import slice_scatter
+# from torch import slice_scatter
 from Segmentationnnn import *
 import matplotlib.pyplot as plt
 import numpy as np
@@ -13,7 +13,7 @@ import seaborn as sns
 # import pathlib
 
 ############################# LOADING THE MODEL  #############################
-model_path = "MODELS/SEGG_layers4_lr0.001_wd0.01_ft16.pth"
+model_path = "MODELS/LargeSeg_layers4_lr0.01_wd0.001_ft16.pth"
 # model_path = "MODELS\BS=8;LR=0.001;WD=0.09;FT=4.pth"
 # model_runlog = "runlogs\LYRS=3;FT=12;BS=4;LR=0.005;WD=0.json"
 
@@ -26,14 +26,14 @@ device = torch.device('cpu')
 model = UNet(4, 16).to(device)
 model.load_state_dict(torch.load(model_path))
 
-H,W = 144, 112
+H,W = 128,96
 
 ### LOAD IMAGES & NORMALIZE DATA ###
 def normalize(arr):
     return (arr-np.mean(arr))/np.std(arr)
 
 input, target, val_input, val_target = get_data(val_mouse=5)
-ind = 122
+ind = 100
 slice_input, slice_target = normalize(val_input[ind]), normalize(val_target[ind])
 print('gelukt')
 
