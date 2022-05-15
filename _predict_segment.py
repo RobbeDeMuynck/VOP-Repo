@@ -23,7 +23,7 @@ model_path = "MODELS/LargeSeg_layers4_lr0.01_wd0.001_ft16.pth"
 #device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 device = torch.device('cpu')
 #torch.cuda.empty_cache()
-model = UNet(4, 16).to(device)
+model = UNet(3, 16).to(device)
 model.load_state_dict(torch.load(model_path))
 
 H,W = 128,96
