@@ -70,33 +70,33 @@ def CM_plot(target, prediction):
     plt.show()
 
 
-### Generate plot
-sns.set_theme(style="white", font_scale = 1.25)
+# ### Generate plot
+# sns.set_theme(style="white", font_scale = 1.25)
 
-N = 13
-RGBA = [(
-    ClassColors[index][0]/255,
-    ClassColors[index][1]/255,
-    ClassColors[index][2]/255,
-    ClassColors[index][-1]) for index in range(N)]
-mycm = matplotlib.colors.ListedColormap(RGBA)
+# N = 13
+# RGBA = [(
+#     ClassColors[index][0]/255,
+#     ClassColors[index][1]/255,
+#     ClassColors[index][2]/255,
+#     ClassColors[index][-1]) for index in range(N)]
+# mycm = matplotlib.colors.ListedColormap(RGBA)
 
 
-def plot_examples(colormap):
-    """
-    Help function to plot data with associated colormap.
-    """
-    np.random.seed(19680801)
-    data = np.random.randn(12, 12)
-    fig, axs = plt.subplots(1, 1, figsize=(1 * 2 + 2, 3), constrained_layout=True)
-    psm = axs.pcolormesh(data, cmap=colormap, rasterized=True)
-    fig.colorbar(psm, ax=axs)
-    plt.show()
+# def plot_examples(colormap):
+#     """
+#     Help function to plot data with associated colormap.
+#     """
+#     np.random.seed(19680801)
+#     data = np.random.randn(12, 12)
+#     fig, axs = plt.subplots(1, 1, figsize=(1 * 2 + 2, 3), constrained_layout=True)
+#     psm = axs.pcolormesh(data, cmap=colormap, rasterized=True)
+#     fig.colorbar(psm, ax=axs)
+#     plt.show()
 
-cmap = cm.get_cmap('Set3')
-RGBA = [(0, 0, 0, 0)]+[tuple(list(RGB)+[1]) for RGB in cmap.colors]
-cmap = matplotlib.colors.ListedColormap(RGBA)
-print(RGBA)
+# cmap = cm.get_cmap('Set3')
+# RGBA = [(0, 0, 0, 0)]+[tuple(list(RGB)+[1]) for RGB in cmap.colors]
+# cmap = matplotlib.colors.ListedColormap(RGBA)
+# print(RGBA)
 
 # plot_examples(cmap)
 

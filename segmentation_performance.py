@@ -1,8 +1,12 @@
-from Segmentationnnn import *
+# from Segmentationnnn import *
+import torch
+from UNET_segmentation import UNet
+from load_data_segmentation import MiceDataset, get_data
 import numpy as np
 import json
 from torchsummary import summary
 from report_tools.confusion_matrix import CM_plot
+from tqdm import tqdm
 
 ### Crop function
 def center_crop(input, H, W):
@@ -10,6 +14,9 @@ def center_crop(input, H, W):
     start_y = y//2 - H//2
     start_x = x//2 - W//2
     return input[:, start_y:start_y+H, start_x:start_x+W]
+
+def normalize(arr):
+    return (arr-np.mean(arr))/np.std(arr)
 
 ### Load the model
 model_path = "MODELS/SEGG_layers4_lr0.001_wd0.01_ft16.pth"
@@ -28,8 +35,9 @@ model = UNet(4, 16).to(device)
 model.load_state_dict(torch.load(model_path))
 
 ### Read-in data
-input, target, val_input, val_target = get_data(val_mouse=5)
-target_masks = val_target
+train_input, train_target, val_input, val_target, test_input, test_target = get_data(plane='sagittal', val_mice=[15, 16, 17], test_mice=[18, 19, 20], standardize=True)
+test_input_normalize, target_masks = normalize(test_input), test_target
+# test_input_normalize, target_masks = normalize(train_input), train_target
 
 ### APPLY MODEL ###
 model.eval()
@@ -42,7 +50,7 @@ else:
 
 # Make prediction for each slice, depending on bounds
 prediction_masks = []
-for slice_to_predict in tqdm(val_input[start:stop]):
+for slice_to_predict in tqdm(test_input_normalize[start:stop]):
     slice_to_predict = torch.from_numpy(np.array(slice_to_predict.copy())).unsqueeze(0).unsqueeze(0)
     organ_likelihood = model(slice_to_predict)[0]
     organ_likelihood = torch.squeeze(organ_likelihood).detach().numpy()

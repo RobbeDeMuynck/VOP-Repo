@@ -1,16 +1,31 @@
 from sklearn.preprocessing import OrdinalEncoder
 # from torch import slice_scatter
-from Segmentationnnn import *
+# from Segmentationnnn import *
+from load_data_segmentation import MiceDataset, get_data
+from UNET_segmentation import UNet
 import matplotlib.pyplot as plt
 import numpy as np
 import json
 from torchsummary import summary
 import seaborn as sns
+import torch
+import torchvision
+from report_tools.plots import segmentation_plot
 
 #from mpl_toolkits.axes_grid1 import make_axes_locatable
 
 # import nibabel as nib
 # import pathlib
+
+### Crop function
+def center_crop(input, H, W):
+    _, y, x = input.shape
+    start_y = y//2 - H//2
+    start_x = x//2 - W//2
+    return input[:, start_y:start_y+H, start_x:start_x+W]
+
+def normalize(arr):
+    return (arr-np.mean(arr))/np.std(arr)
 
 ############################# LOADING THE MODEL  #############################
 model_path = "MODELS/LargeSeg_layers4_lr0.001_wd0_ft12.pth"
@@ -22,63 +37,57 @@ model_path = "MODELS/LargeSeg_layers4_lr0.001_wd0_ft12.pth"
 #     layers, features = run["layers"], run["features"]
 #device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 device = torch.device('cpu')
-#torch.cuda.empty_cache()
+torch.cuda.empty_cache()
 model = UNet(4, 12).to(device)
 model.load_state_dict(torch.load(model_path))
 
-H,W = 128,96
-
 ### LOAD IMAGES & NORMALIZE DATA ###
-def normalize(arr):
-    return (arr-np.mean(arr))/np.std(arr)
-#train_input, train_target, val_input, val_target, test_input, test_target = get_data(plane='sagittal', val_mice=[15, 16, 17], test_mice=[18, 19, 20])
+train_input, train_target, val_input, val_target, test_input, test_target = get_data(plane='sagittal', val_mice=[15, 16, 17], test_mice=[18, 19, 20], standardize=False)
 
-input, target, val_input, val_target = get_data(val_mouse=5)
-ind = 100
-slice_input, slice_target = normalize(val_input[ind]), normalize(val_target[ind])
-print('gelukt')
-
-slice_to_predict = torch.from_numpy(np.array(slice_input.copy())).unsqueeze(0).unsqueeze(0)
-print(f'modelinputsliceshape: {slice_to_predict.shape}')
+idx = 140+70
+slice_input, slice_target = normalize(test_input[idx]), test_target[idx]
 
 ### APPLY MODEL ###
 model.eval()
-x = model(slice_to_predict)[0]
-slice_to_predict = torchvision.transforms.CenterCrop([H,W])(slice_to_predict)
-slice_to_predict = torch.squeeze(slice_to_predict).detach().numpy()
-#slice_to_predict = slice_to_predict[0:144,0:112]
-print(f'imageshape:{slice_to_predict.shape}')
+slice_to_predict = torch.from_numpy(np.array(slice_input.copy())).unsqueeze(0).unsqueeze(0)
+organ_likelihood = model(slice_to_predict)[0]
+organ_likelihood = torch.squeeze(organ_likelihood).detach().numpy()
 
-#print(x)
+slice_prediction_mask = np.argmax(organ_likelihood, axis=0)
 
-print(x.shape)
+### Make plot ###
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(4, 3), constrained_layout=True)
 
-x = torch.squeeze(x).detach().numpy()
-print(f'maskshape:{x.shape}')
+segmentation_plot(ax1, test_input[idx], test_target[idx], legend=False)
+segmentation_plot(ax2, test_input[idx], slice_prediction_mask, legend=False)
 
-slice_prediction =np.argmax(x,axis=0)
-
-
-
-
-# plot input vs prediction
-fig, axs = plt.subplots(1, 1)
-
-
-# axs[0].imshow(slice_input, cmap='bone')
-# axs[0].imshow(slice_target, cmap='viridis',alpha=.8)
-axs.imshow(slice_to_predict,cmap='bone')
-
-axs.imshow(slice_prediction, cmap='viridis',alpha=.6)
-# divider = make_axes_locatable(axs[1])
-# cax = divider.append_axes('right')
-
-# fig.colorbar(seg, cax = cax)
-# axs.add
-
-
-#axs[0].set_title('Input')
-axs.set_title('Prediction')
-plt.tight_layout()
-plt.savefig(f'IMAGES/PRED_SAG.png', dpi=200)
+ax1.set_title('Actual organ masks')
+ax2.set_title('Predicted organ masks')
 plt.show()
+
+
+
+# #slice_to_predict = slice_to_predict[0:144,0:112]
+# print(f'imageshape:{slice_to_predict.shape}')
+
+# # plot input vs prediction
+# fig, ax = plt.subplots(1, 1)
+
+
+# # axs[0].imshow(slice_input, cmap='bone')
+# # axs[0].imshow(slice_target, cmap='viridis',alpha=.8)
+# axs.imshow(slice_to_predict,cmap='bone')
+
+# axs.imshow(slice_prediction, cmap='viridis',alpha=.6)
+# # divider = make_axes_locatable(axs[1])
+# # cax = divider.append_axes('right')
+
+# # fig.colorbar(seg, cax = cax)
+# # axs.add
+
+
+# #axs[0].set_title('Input')
+# axs.set_title('Prediction')
+# # plt.tight_layout()
+# # plt.savefig(f'IMAGES/PRED_SAG.png', dpi=200)
+# plt.show()

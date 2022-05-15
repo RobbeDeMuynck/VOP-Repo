@@ -52,7 +52,7 @@ def mapping(old_organ, dict):
                 new_organ[i, j, k] = dict[old_organ[i, j, k]]
     return new_organ
 
-def get_data(plane='sagittal', val_mice=[], test_mice=[]):
+def get_data(plane='sagittal', val_mice=[], test_mice=[], standardize=True):
     # Construct data lists
     train_input, train_target = [], []
     val_input, val_target = [], []
@@ -109,17 +109,18 @@ def get_data(plane='sagittal', val_mice=[], test_mice=[]):
         #     ct, organ = ct[:140, :102, :194], organ[:140, :102, :194]
 
         # Standardized index of organ segmentation
-        with open(path_class) as f:
-            content = f.read()
-            indices = content.split('\n')[1].split('=')[1].split('|')
-            names = content.split('\n')[2].split('=')[1].split('|')
-            dict = {int(idx): name for idx, name in zip(indices, names)}
-        
-            mapping_old_to_standard = {}
-            for old_idx, old_name in dict.items():
-                mapping_old_to_standard[old_idx] = name_to_idx_standard[old_name]
+        if standardize:
+            with open(path_class) as f:
+                content = f.read()
+                indices = content.split('\n')[1].split('=')[1].split('|')
+                names = content.split('\n')[2].split('=')[1].split('|')
+                dict = {int(idx): name for idx, name in zip(indices, names)}
             
-            organ = mapping(organ, mapping_old_to_standard)
+                mapping_old_to_standard = {}
+                for old_idx, old_name in dict.items():
+                    mapping_old_to_standard[old_idx] = name_to_idx_standard[old_name]
+                
+                organ = mapping(organ, mapping_old_to_standard)
             # print(mapping_old_to_standard)
 
         # Append each mouse to
