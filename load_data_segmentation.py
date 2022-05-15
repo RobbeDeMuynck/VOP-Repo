@@ -63,7 +63,7 @@ def get_data(plane='sagittal', val_mice=[], test_mice=[]):
         print(f'shape of ct mouse {mouse}:\t({L}, {H}, {W})')
         print(f'shape of organ mouse {mouse}:\t({L_}, {H_}, {W_})\n')
         if plane == 'sagittal':
-            ct, organ = ct.T, organ.T
+            ct, organ = ct, organ
             print(f'shape of ct mouse {mouse}:\t({ct.shape})')
         for j in range(100):
             if i+1 in val_mice:
@@ -77,7 +77,7 @@ def get_data(plane='sagittal', val_mice=[], test_mice=[]):
                 train_target.append(organ)
         if i == 0:
             plt.imshow(ct[50,:,:], cmap='bone')
-            plt.imshow(organ[50,:,:], cmap='viridis',alpha=.1)
+            plt.imshow(organ[50,:,:], cmap='viridis',alpha=.5)
             plt.show()
 
     train_input, train_target = np.array(train_input), np.array(train_target, dtype=int)
@@ -86,4 +86,4 @@ def get_data(plane='sagittal', val_mice=[], test_mice=[]):
 
     return train_input, train_target, val_input, val_target, test_input, test_target
 
-train_input, train_target, val_input, val_target, test_input, test_target = get_data(plane='sagittal', val_mice=[14, 15, 16], test_mice=[17, 18, 19])
+train_input, train_target, val_input, val_target, test_input, test_target = get_data(plane='sagittal', val_mice=[15, 16, 17], test_mice=[18, 19, 20])
