@@ -10,7 +10,7 @@ from torchsummary import summary
 import seaborn as sns
 import torch
 import torchvision
-from report_tools.plots import segmentation_plot
+from report_tools.plots import segmentation_plot, segmentation_legend_elements
 
 #from mpl_toolkits.axes_grid1 import make_axes_locatable
 
@@ -42,9 +42,9 @@ model = UNet(4, 12).to(device)
 model.load_state_dict(torch.load(model_path))
 
 ### LOAD IMAGES & NORMALIZE DATA ###
-train_input, train_target, val_input, val_target, test_input, test_target = get_data(plane='sagittal', val_mice=[15, 16, 17], test_mice=[18, 19, 20], standardize=False)
+train_input, train_target, val_input, val_target, test_input, test_target = get_data(plane='sagittal', val_mice=[15, 16, 17], test_mice=[18, 19, 20], standardize=True)
 
-idx = 140+70
+idx = 70
 slice_input, slice_target = normalize(test_input[idx]), test_target[idx]
 
 ### APPLY MODEL ###
@@ -63,6 +63,10 @@ segmentation_plot(ax2, test_input[idx], slice_prediction_mask, legend=False)
 
 ax1.set_title('Actual organ masks')
 ax2.set_title('Predicted organ masks')
+# plt.legend(lines, labels, loc = 'lower center', bbox_to_anchor = (0,-0.1,1,1),
+            # bbox_transform = plt.gcf().transFigure )
+ax1.legend(handles=segmentation_legend_elements, loc='upper center', bbox_to_anchor=(0.8, -0.3), ncol=6)#, bbox_transform = plt.gcf().transFigure)
+plt.tight_layout()
 plt.show()
 
 
