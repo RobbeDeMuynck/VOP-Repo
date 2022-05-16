@@ -148,10 +148,10 @@ torch.cuda.empty_cache()
 # device = torch.device('cpu')
 
 # Declare training parameters & network architecture
-lr = [0.001]
+lr = [0.01]
 wd = [0]
-ft = [12]
-ly = 3
+ft = [16]
+ly = 4
 for l in lr:
     for w in wd:
         for f in ft:
@@ -161,6 +161,6 @@ for l in lr:
             val_loader = DataLoader(MiceDataset(val_input, val_target), batch_size=4, shuffle=True, drop_last=True)
             train(ly, f, device,
                 train_loader, val_loader,
-                num_epochs=120, batch_size=4, learning_rate=l, weight_decay=w, patience=5,
-                model_name='SEGMENT_3lyrs_12fts', log_folder='runlogs_segmentation', save=True)
+                num_epochs=120, batch_size=4, learning_rate=0.001, weight_decay=w, patience=5,
+                model_name='SEGMENT_3lyrs_16fts', log_folder='runlogs_segmentation', save=True)
 

@@ -29,6 +29,7 @@ def normalize(arr):
 
 ############################# LOADING THE MODEL  #############################
 model_path = "MODELS/LargeSeg_layers4_lr0.001_wd0_ft12.pth"
+#model_path = "MODELS/SEGMENT_3lyrs_16fts.pth" -----------------> WERKT NIET?????
 # model_path = "MODELS\BS=8;LR=0.001;WD=0.09;FT=4.pth"
 # model_runlog = "runlogs\LYRS=3;FT=12;BS=4;LR=0.005;WD=0.json"
 
@@ -39,7 +40,7 @@ model_path = "MODELS/LargeSeg_layers4_lr0.001_wd0_ft12.pth"
 device = torch.device('cpu')
 torch.cuda.empty_cache()
 model = UNet(4, 12).to(device)
-model.load_state_dict(torch.load(model_path))
+model.load_state_dict(torch.load(model_path, map_location=torch.device('cpu')))
 
 ### LOAD IMAGES & NORMALIZE DATA ###
 train_input, train_target, val_input, val_target, test_input, test_target = get_data(plane='sagittal', val_mice=[15, 16, 17], test_mice=[18, 19, 20], standardize=True)
