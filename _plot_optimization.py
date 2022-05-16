@@ -4,8 +4,9 @@ import matplotlib.pyplot as plt
 import json
 from pathlib import Path
 import numpy as np
+import scipy as sc
 
-files = Path('runlogs').glob('*')
+files = Path('runlogs_repeat').glob('*')
 
 cols = ["Layers","Starting features","Batch size","Learning rate","Weight decay","Minimum validation loss","Epochs trained","Training time [mins]"]
 vals = {col: [] for col in cols}
@@ -36,7 +37,10 @@ for file in files:
             print(run["layers"], run["features"], run["batch_size"], run["learning_rate"], run["weight_decay"])
  
 Data = pd.DataFrame(data=vals,columns=cols)
-
+losses_3lay = np.asarray(Data)[:10,5]
+losses_4lay = np.asarray(Data)[10:,5]
+stat, pvalue = sc.stats.ttest_rel(losses_3lay,losses_4lay)
+print('result of the related t-test: stat = {} and p-value = {}'.format(stat,pvalue))
 print(f"""
 Number of networks trained:\t{len(train_time)}
 Total training time [mins]:\t{sum(train_time)/60} 
