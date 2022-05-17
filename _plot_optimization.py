@@ -37,10 +37,19 @@ for file in files:
             print(run["layers"], run["features"], run["batch_size"], run["learning_rate"], run["weight_decay"])
  
 Data = pd.DataFrame(data=vals,columns=cols)
+
 losses_3lay = np.asarray(Data)[:10,5]
 losses_4lay = np.asarray(Data)[10:,5]
+time_3lay = np.asarray(Data)[:10,-1]
 stat, pvalue = sc.stats.ttest_rel(losses_3lay,losses_4lay)
+stdev, mean = np.std(losses_3lay), np.mean(losses_3lay)
+stdev_time, mean_time = np.std(time_3lay), np.mean(time_3lay)
+
 print('result of the related t-test: stat = {} and p-value = {}'.format(stat,pvalue))
+print('3 layer model: standard deviation = {}, mean = {}'.format(stdev,mean))
+print('3 layer model: standard deviation of time = {}, mean runtime = {}'.format(stdev_time,mean_time))
+
+
 print(f"""
 Number of networks trained:\t{len(train_time)}
 Total training time [mins]:\t{sum(train_time)/60} 
