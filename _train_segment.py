@@ -150,18 +150,18 @@ torch.cuda.empty_cache()
 # Declare training parameters & network architecture
 lr = [0.01]
 wd = [0]
-ft = [8]
-ly = 4
+ft = [20]
+ly = 3
 for l in lr:
     for w in wd:
         for f in ft:
             # train_input, train_target, val_input, val_target, test_input, test_target = get_data(plane='sagittal', val_mice=[15, 16, 17], test_mice=[18, 19, 20])
-            train_input, train_target, val_input, val_target, test_input, test_target = get_data(plane='sagittal', val_mice=[18, 19, 20], test_mice=[15, 16, 17])
+            train_input, train_target, val_input, val_target, test_input, test_target = get_data(plane='sagittal', val_mice=[15, 16, 17], test_mice=[18, 19, 20])
             #train_input, train_target, val_input, val_target = get_data()
             train_loader = DataLoader(MiceDataset(train_input, train_target), batch_size=4, shuffle=True, drop_last=True)
             val_loader = DataLoader(MiceDataset(val_input, val_target), batch_size=4, shuffle=True, drop_last=True)
             train(ly, f, device,
                 train_loader, val_loader,
                 num_epochs=120, batch_size=4, learning_rate=0.01, weight_decay=w, patience=5,
-                model_name='SEGMENT_4lyrs_8fts_0.01LR', log_folder='runlogs_segmentation', save=True)
+                model_name='SEGMENT_3lyrs_20fts_0.01LR', log_folder='runlogs_segmentation', save=True)
 
