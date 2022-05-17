@@ -57,7 +57,7 @@ def CM_plot(target, prediction):
     # print(cm_df.head())
     plt.figure(figsize=(8, 8))
     sns.set_theme(style="white", font_scale = 1.25)
-    g = sns.heatmap(cm_df, annot=True, fmt='.1f', cmap='Blues')
+    g = sns.heatmap(cm_df, annot=True, fmt='.2f', cmap='Blues')
     # plot.set_title('Confusion Matrix')
     # plot.set_ylabel('Actual organ')
     # plot.set_xlabel('Predicted organ')

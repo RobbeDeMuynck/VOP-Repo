@@ -29,8 +29,8 @@ def normalize(arr):
 
 ############################# LOADING THE MODEL  #############################
 # model_path = "MODELS/LargeSeg_layers4_lr0.001_wd0_ft12.pth"
-# model_path = "MODELS/SEGMENT_3lyrs_16fts.pth"
-model_path = "MODELS\SEGMENT_4lyrs_8fts_0.01LR.pth"
+model_path = "MODELS/SEGMENT_3lyrs_12fts.pth"
+# model_path = "MODELS\SEGMENT_4lyrs_8fts_0.01LR.pth"
 # model_path = "MODELS\BS=8;LR=0.001;WD=0.09;FT=4.pth"
 # model_runlog = "runlogs\LYRS=3;FT=12;BS=4;LR=0.005;WD=0.json"
 
@@ -40,7 +40,7 @@ model_path = "MODELS\SEGMENT_4lyrs_8fts_0.01LR.pth"
 #device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 device = torch.device('cpu')
 torch.cuda.empty_cache()
-model = UNet(4, 8).to(device)
+model = UNet(3, 12).to(device)
 model.load_state_dict(torch.load(model_path, map_location=torch.device('cpu')))
 
 ### LOAD IMAGES & NORMALIZE DATA ###
