@@ -20,7 +20,7 @@ def normalize(arr):
 
 ### Load the model
 # model_path = "MODELS/SEGG_layers4_lr0.001_wd0.01_ft16.pth"
-model_path = "MODELS/SEGMENT_3lyrs_12fts.pth"
+model_path = "MODELS\SEGMENT_4lyrs_8fts_0.01LR.pth"
 # model_path = "MODELS/LargeSeg_layers4_lr0.001_wd0_ft12.pth"
 
 # model_path = "MODELS\BS=8;LR=0.001;WD=0.09;FT=4.pth"
@@ -33,7 +33,7 @@ model_path = "MODELS/SEGMENT_3lyrs_12fts.pth"
 
 device = torch.device('cpu')
 torch.cuda.empty_cache()
-model = UNet(3, 12).to(device)
+model = UNet(4, 8).to(device)
 model.load_state_dict(torch.load(model_path, map_location=torch.device('cpu')))
 
 ### Read-in data
