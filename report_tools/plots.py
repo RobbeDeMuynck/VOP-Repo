@@ -34,7 +34,7 @@ def segmentation_plot(ax, CT, organ_mask, legend=True):
     ### Construct plot
     # fig, ax = plt.subplots(1, 1, figsize=(4, 3), constrained_layout=True)
     ax.imshow(CT, cmap='bone')
-    psm = ax.imshow(organ_mask, cmap=cmap, alpha=.5, vmin=-0.5, vmax=12.5)
+    psm = ax.imshow(organ_mask, cmap=cmap, alpha=.425, vmin=-0.5, vmax=12.5)
     # fig.colorbar(psm, ax=axs)
 
     # Add legend patches

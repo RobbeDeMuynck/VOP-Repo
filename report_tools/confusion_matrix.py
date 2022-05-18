@@ -4,7 +4,7 @@ import matplotlib
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 import seaborn as sns
-from sklearn.metrics import confusion_matrix
+from sklearn.metrics import confusion_matrix, accuracy_score, precision_score, recall_score, f1_score
 
 # with open(path_class) as f:
         #     # EXAMPLE for "M03_024h/Organ_280.cls":
@@ -43,19 +43,30 @@ ClassColors = {
 }
 
 
-def CM_plot(target, prediction):
+def CM_plot(target, prediction, stats=True):
     '''target, prediction: 3D organs mask matrices (0-12)'''
     ### Check dimensions
     assert target.shape == prediction.shape, f'Shapes {target.shape} and {prediction.shape} do not match!'
     ### Calculate confusion 
     target, prediction = target.flatten(), prediction.flatten()
     cm = confusion_matrix(target, prediction, labels=[i for i in range(13)], normalize='true')
+
+    if stats:
+        accuracy = accuracy_score(target, prediction)
+        # precision = precision_score(target, prediction, average='weighted')
+        # recall = recall_score(target, precision, average='weighted')
+        f1 = f1_score(target, prediction, average=None)
+        print(f'''accuracy =\t{accuracy}\nf1-score = \t{f1}''')
+        # precision =\t{precision}
+        # recall =\t{recall}
+        # calculated f1 =\t{2*precision*recall/(precision+recall)}
+
     ### Create dataframe and plot confusion matrix
     cm_df = pd.DataFrame(cm,
                         index = [ClassNames[idx] for idx in range(13)],
                         columns = [ClassNames[idx] for idx in range(13)])
     # print(cm_df.head())
-    plt.figure(figsize=(8, 8))
+    plt.figure(figsize=(12, 8))
     sns.set_theme(style="white", font_scale = 1.25)
     g = sns.heatmap(cm_df, annot=True, fmt='.2f', cmap='Blues')
     # plot.set_title('Confusion Matrix')
@@ -66,6 +77,7 @@ def CM_plot(target, prediction):
     plt.xlabel('Predicted organ', labelpad=10)
     plt.xticks(rotation=45)
     plt.tight_layout()
+    # plt.savefig("IMAGES/CM.png", dpi=200)
     plt.show()
 
 

@@ -44,9 +44,9 @@ model = UNet(3, 12).to(device)
 model.load_state_dict(torch.load(model_path, map_location=torch.device('cpu')))
 
 ### LOAD IMAGES & NORMALIZE DATA ###
-train_input, train_target, val_input, val_target, test_input, test_target = get_data(plane='sagittal', val_mice=[15, 16, 17], test_mice=[18, 19, 20], standardize=True)
+train_input, train_target, val_input, val_target, test_input, test_target = get_data(plane='sagittal', val_mice=[15, 16, 17], test_mice=[18, 19, 20], standardize=False)
 
-idx = 70
+idx = 60
 slice_input, slice_target = normalize(test_input[idx]), test_target[idx]
 
 ### APPLY MODEL ###
@@ -58,17 +58,31 @@ organ_likelihood = torch.squeeze(organ_likelihood).detach().numpy()
 slice_prediction_mask = np.argmax(organ_likelihood, axis=0)
 
 ### Make plot ###
-fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(4, 3), constrained_layout=True)
+# fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(4, 3), constrained_layout=True)
 
-segmentation_plot(ax1, test_input[idx], test_target[idx], legend=False)
-segmentation_plot(ax2, test_input[idx], slice_prediction_mask, legend=False)
+# segmentation_plot(ax1, test_input[idx], test_target[idx], legend=False)
+# segmentation_plot(ax2, test_input[idx], slice_prediction_mask, legend=False)
 
-ax1.set_title('Actual organ masks')
-ax2.set_title('Predicted organ masks')
+# ax1.set_title('Actual organ masks')
+# ax2.set_title('Predicted organ masks')
+# # plt.legend(lines, labels, loc = 'lower center', bbox_to_anchor = (0,-0.1,1,1),
+#             # bbox_transform = plt.gcf().transFigure )
+# ax1.legend(handles=segmentation_legend_elements, loc='upper center', bbox_to_anchor=(0.8, -0.3), ncol=6)#, bbox_transform = plt.gcf().transFigure)
+
+fig, ax = plt.subplots(1, 1, figsize=(12, 4), constrained_layout=True, dpi=300)
+
+# segmentation_plot(ax, test_input[idx], slice_prediction_mask, legend=False)
+
+# ax1.set_title('Actual organ masks')
+# ax2.set_title('Predicted organ masks')
 # plt.legend(lines, labels, loc = 'lower center', bbox_to_anchor = (0,-0.1,1,1),
             # bbox_transform = plt.gcf().transFigure )
-ax1.legend(handles=segmentation_legend_elements, loc='upper center', bbox_to_anchor=(0.8, -0.3), ncol=6)#, bbox_transform = plt.gcf().transFigure)
+# ax.legend(handles=segmentation_legend_elements, loc='upper center', bbox_to_anchor=(0.8, -0.3), ncol=6)#, bbox_transform = plt.gcf().transFigure)
+ax.legend(handles=segmentation_legend_elements, loc='center', ncol=6)#, bbox_transform = plt.gcf().transFigure)
+
+
 plt.tight_layout()
+plt.savefig("IMAGES/segmentation_prediction_legend.png")
 plt.show()
 
 
