@@ -1,7 +1,7 @@
-from _UNET import UNet
+from enhancement_UNET import UNet
 import torch
 import torch.nn as nn
-from _load_data import get_data
+from enhancement_load_data import get_data
 import matplotlib.pyplot as plt
 import numpy as np
 import json

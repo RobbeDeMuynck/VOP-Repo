@@ -4,9 +4,9 @@ import pydicom
 from pydicom.dataset import Dataset, FileDataset
 from pydicom.uid import ExplicitVRLittleEndian
 import pydicom._storage_sopclass_uids
-from _UNET import UNet
+from enhancement_UNET import UNet
 import torch
-from _load_data import get_data
+from enhancement_load_data import get_data
 import numpy as np
 import json
 import matplotlib.pyplot as plt

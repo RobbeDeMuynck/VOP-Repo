@@ -1,4 +1,4 @@
-from _UNET import UNet
+from enhancement_UNET import UNet
 import torch
 import torch.nn as nn
 import torchvision
@@ -9,7 +9,7 @@ from torch.autograd import Variable
 import time
 import json
 
-from _load_data import MiceDataset, get_data
+from enhancement_load_data import MiceDataset, get_data
 from torch.utils.data import DataLoader
 
 ################################## TRAINING  ##################################

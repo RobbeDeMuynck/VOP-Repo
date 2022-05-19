@@ -1,7 +1,7 @@
-from _load_data import MiceDataset, get_data
+from enhancement_load_data import MiceDataset, get_data
 import torch
 from torch.utils.data import DataLoader
-from _train import train
+from enhancement_train import train
 
 ### Declare device ###
 device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')

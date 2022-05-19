@@ -1,8 +1,8 @@
 from sklearn.preprocessing import OrdinalEncoder
 # from torch import slice_scatter
 # from Segmentationnnn import *
-from load_data_segmentation import MiceDataset, get_data
-from UNET_segmentation import UNet
+from segmentation_load_data import MiceDataset, get_data
+from segmentation_UNET import UNet
 import matplotlib.pyplot as plt
 import numpy as np
 import json

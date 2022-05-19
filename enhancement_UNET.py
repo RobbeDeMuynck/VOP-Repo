@@ -83,14 +83,13 @@ class decoder_block(nn.Module):
         return x
 
 ##################################### COMBINING BUILDING BLOCKS TO RESUNET##################################
-
 class UNet(nn.Module):
     """A UNet neural network is constructed by combining its subblocks.
     The network structure is initialized by declaring the following parameters:
-    -- ft: (int) number of starting features: number of channels of the first layer
-    -- layers: (int) number of encoding operations in the network"""
+    -- layers: (int) number of encoding operations in the network
+    -- ft: (int) number of starting features: number of channels of the first layer"""
 
-    def __init__(self, layers=4, ft=10):
+    def __init__(self, layers=3, ft=12):
         super().__init__()
         self.layers = layers
 
@@ -109,7 +108,7 @@ class UNet(nn.Module):
             self.d3 = decoder_block(2*ft,ft)
 
             ### Last layer: mapping to prediction ###
-            self.outputs = nn.Conv2d(ft,2,kernel_size=1,padding=0)
+            self.outputs = nn.Conv2d(ft, 1, kernel_size=1, padding=0)
         elif layers == 4:
             ### Encoder ###
             self.e1 = encoder_block(1, ft)
@@ -127,7 +126,7 @@ class UNet(nn.Module):
             self.d4 = decoder_block(2*ft,ft)
 
             ### Last layer: mapping to prediction ###
-            self.outputs = nn.Conv2d(ft,2,kernel_size=1,padding=0)
+            self.outputs = nn.Conv2d(ft, 1, kernel_size=1, padding=0)
         else: 
             raise Exception("Cannot construct networ: 'layers' parameter can only be 3 or 4")
 
@@ -171,73 +170,3 @@ class UNet(nn.Module):
             ### Last layer: mapping to prediction ###
             outputs = self.outputs(d4)
             return outputs,s1,p1,s2,p2,s3,p3,s4,p4,b,d1,d2,d3,d4
-        
-        
-
-# class UNet(nn.Module):
-#     """A UNet neural network is constructed by combining its subblocks.
-#     The network structure is initialized by declaring the following parameters:
-#     -- ft: (int) number of starting features: number of channels of the first layer
-#     -- layers: (int) number of encoding operations in the network"""
-
-#     def __init__(self, layers=4, ft=10):
-#         super().__init__()
-#         self.layers = layers
-#         self.device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
-
-#         ### Encoder ###
-#         self.encoders = []
-#         self.encoders.append(encoder_block(1, ft).to(self.device))
-#         for i in range(1, layers):
-#             self.encoders.append(encoder_block(2**(i-1)*ft, 2**(i)*ft).to(self.device))
-
-#         ### Bottleneck ###
-#         self.bottleneck = res_block(2**(layers-1)*ft, 2**(layers)*ft).to(self.device)
-        
-#         ### Decoder ###
-#         self.decoders = []
-#         for i in range(layers, 0, -1):
-#             self.decoders.append(decoder_block(2**(i)*ft, 2**(i-1)*ft).to(self.device))
-            
-#         ### Last layer: mapping to prediction ###
-#         self.outputs = nn.Conv2d(ft, 1, kernel_size=1, padding=0).to(self.device)
-
-#     def forward(self, inputs):
-#         ### Encoder ###
-#         # Store skip connections in dictionary for later use in decoder
-#         skip_con = {}
-#         down = inputs
-#         for i, encoder in enumerate(self.encoders):
-#             skip_con[f'{i}'], down = encoder(down)
-
-#         ### Bottleneck ###
-#         bottleneck = self.bottleneck(down)
-
-#         ### Decoder ###
-#         up = bottleneck
-#         for i, decoder in enumerate(self.decoders):
-#             up = decoder(up, skip_con[f'{self.layers-1-i}'])
-
-#         ### Last layer: mapping to prediction ###
-#         outputs = self.outputs(up)
-#         return outputs
-
-# import torch
-# import numpy as np
-# import torch.nn as nn
-# import torchvision
-# import matplotlib.pyplot as plt
-# from tqdm import tqdm
-# from torch.optim import Adam
-# from torch.autograd import Variable
-# from torchvision.transforms import transforms
-# # import pathlib
-# # import nibabel as nib
-# from torch.utils.data import Dataset, DataLoader
-# from torch.utils.tensorboard import SummaryWriter
-# import time
-# import seaborn as sns
-# import params
-
-# device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
-# torch.cuda.empty_cache()

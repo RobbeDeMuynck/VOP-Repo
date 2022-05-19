@@ -18,8 +18,8 @@ from torch.autograd import Variable
 import time
 import json
 #from Segmentationnnn import *
-from load_data_segmentation import MiceDataset, get_data
-from UNET_segmentation import UNet
+from segmentation_load_data import MiceDataset, get_data
+from segmentation_UNET import UNet
 from torch.utils.data import DataLoader
 # from torchsummary import summary
 

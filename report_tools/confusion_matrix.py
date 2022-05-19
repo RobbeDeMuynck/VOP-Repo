@@ -77,7 +77,7 @@ def CM_plot(target, prediction, stats=True):
     plt.xlabel('Predicted organ', labelpad=10)
     plt.xticks(rotation=45)
     plt.tight_layout()
-    # plt.savefig("IMAGES/CM.png", dpi=200)
+    # plt.savefig("./IMAGES/CM.png", dpi=200)
     plt.show()
 
 

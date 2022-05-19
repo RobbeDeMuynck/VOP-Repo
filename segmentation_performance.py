@@ -1,6 +1,6 @@
 import torch
-from UNET_segmentation import UNet
-from load_data_segmentation import MiceDataset, get_data
+from segmentation_UNET import UNet
+from segmentation_load_data import MiceDataset, get_data
 import numpy as np
 import json
 from torchsummary import summary
