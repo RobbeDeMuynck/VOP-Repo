@@ -22,7 +22,7 @@ class conv_block(nn.Module):
         x = self.conv2(x)
         x = self.bn2(x)
         x = self.relu(x)
-        return x ### Hier geen identity mapping?
+        return x # no identity mapping
 
 class res_block(nn.Module):
     """2 times:  3x3 convolution, followed by batch normalization and a ReLu.
@@ -86,8 +86,8 @@ class decoder_block(nn.Module):
 class UNet(nn.Module):
     """A UNet neural network is constructed by combining its subblocks.
     The network structure is initialized by declaring the following parameters:
-    -- ft: (int) number of starting features: number of channels of the first layer
-    -- layers: (int) number of encoding operations in the network"""
+    -- layers: (int) number of encoding operations in the network
+    -- ft: (int) number of starting features: number of channels of the first layer"""
 
     def __init__(self, layers=3, ft=64):
         super().__init__()
