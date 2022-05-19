@@ -6,7 +6,7 @@ from pathlib import Path
 import numpy as np
 import scipy as sc
 
-files = Path('runlogs_repeat').glob('*')
+files = Path('./runlogs_repeat').glob('*')
 
 cols = ["Layers","Starting features","Batch size","Learning rate","Weight decay","Minimum validation loss","Epochs trained","Training time [mins]"]
 vals = {col: [] for col in cols}

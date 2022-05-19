@@ -5,12 +5,10 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import pingouin as pg
 
-data = "https://vincentarelbundock.github.io/Rdatasets/csv/datasets/PlantGrowth.csv"
-
 losses = []
 for m in range(6):
     for j in range(10):
-        path = f'runlogs_kfold/LYRS=3;FT=12;BS=4;LR=0.001;WD=0,valm={m};RUN={j}.json'
+        path = f'./runlogs_kfold/LYRS=3;FT=12;BS=4;LR=0.001;WD=0,valm={m};RUN={j}.json'
         f = open(path)
         data = json.load(f)
         losses.append(data['val_loss'][-1])

@@ -19,13 +19,13 @@ import numpy as np
 #        losses = train_loss, val_loss
 # 4, 12, 12, 0.001, 0
 
-with open(Path('runlogs/LYRS={};FT={};BS={};LR={};WD={}.json'.format(3, 12, 8, 0.001, 0)), 'r') as RUN:
+with open(Path('./runlogs/LYRS={};FT={};BS={};LR={};WD={}.json'.format(3, 12, 8, 0.001, 0)), 'r') as RUN:
     run = json.load(RUN)
     losses = run["train_loss"], run["val_loss"]
 
 n = len(losses)
-palette = sns.color_palette("mako_r", n)
-palette = sns.color_palette("crest", n)
+# palette = sns.color_palette("mako_r", n)
+# palette = sns.color_palette("crest", n)
 palette = sns.color_palette("colorblind")
 fs = 15
 fig, ax = plt.subplots(1, 1, figsize=(10, 6))
@@ -39,6 +39,6 @@ ax.legend(fontsize=fs)
 ax.grid()
 
 plt.tight_layout()
-plt.savefig('IMAGES/Overfit_prevention.png', dpi=200)
+# plt.savefig('./IMAGES/Overfit_prevention.png', dpi=200)
 plt.show()
 

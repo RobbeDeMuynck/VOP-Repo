@@ -1,6 +1,0 @@
-# UNet skip connection zonder conv
-# is it learning? --> validation losses vóór 
-
-
-
-# slices sagittal/coronal aligneren niet?

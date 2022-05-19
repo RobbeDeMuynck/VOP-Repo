@@ -17,7 +17,7 @@ patience = 5 #100
 ### Declare network architecture ###
 layers = [3] # [3, 4]
 features = [12] # [4, 8, 12, 16]
-val_mouses = [0,1,2,3,4,5]
+val_mice = [0,1,2,3,4,5]
 
 repeats = 1
 ### Train model ###
@@ -26,7 +26,7 @@ for LYRS in layers:
                 for BS in batch_size:
                         for LR in learning_rate:
                                 for WD in weight_decay:
-                                        for v in val_mouses:
+                                        for v in val_mice:
                                                 for i in range(repeats):
                                                         ### Declare training & validation datasets ###
                                                         input, target, val_input, val_target = get_data(plane='transversal', val_mouse=v)

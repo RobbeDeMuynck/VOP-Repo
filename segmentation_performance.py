@@ -1,4 +1,3 @@
-# from Segmentationnnn import *
 import torch
 from UNET_segmentation import UNet
 from load_data_segmentation import MiceDataset, get_data
