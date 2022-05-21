@@ -1,4 +1,4 @@
-from _load_data import MiceDataset, get_data
+from enhancement_load_data import MiceDataset, get_data
 import torch
 from torch.utils.data import DataLoader
 from learning_train import train
