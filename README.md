@@ -27,7 +27,7 @@ The model is trained until the validation loss has not decreased for 5 epochs. A
 ### Result
 All results for contrast enhancement and organ segmentation can be found in the 'IMAGES' folder.
 
-[Contrast](../main/IMAGES/Result_bone_transversal1_M08_Layers=3,FT=16,BS=4,LR=0.001.png)
+![Contrast](../main/IMAGES/Result_bone_transversal1_M08_Layers=3,FT=16,BS=4,LR=0.001.png)
 
 ![Contrast](../main/IMAGES/Result_bone_coronal_M08_Layers=3,FT=16,BS=4,LR=0.001.png)
 
