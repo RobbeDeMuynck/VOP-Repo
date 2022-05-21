@@ -18,7 +18,7 @@ The dataset from the study of [S. Rosenhein et al.](https://www.nature.com/artic
 
 A modified U-NET was implemented with the use of 'Pytorch'. This model can be altered for different number of:  Layers, Starting Features, Batch size and Learning rates.
 
-![U-NET](../blob/main/IMAGES/Unet.png)
+![U-NET](../main/IMAGES/Unet.png)
 
 ### Training and testing
 
