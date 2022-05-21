@@ -18,20 +18,20 @@ The dataset from the study of [S. Rosenhein et al.](https://www.nature.com/artic
 
 A modified U-NET was implemented with the use of 'Pytorch'. This model can be altered for different number of:  Layers, Starting Features, Batch size and Learning rates.
 
-![U-NET](IMAGES\Unet.png)
+![U-NET](../blob/main/IMAGES/Unet.png)
 
 ### Training and testing
 
 The model is trained until the validation loss has not decreased for 5 epochs. After training the model is optimized, using the Adam opimizer, for different sets of parameters: Layers, Starting Features, Batch size and Learning rates. This is done for both contrast enhancement and segmentation.
 
 ### Result
-Results for contrast enhancement:
+Results for contrast enhancement and organ segmentation can be found in the 'IMAGES' folder.
 
-![Contrast](.\IMAGES\Result_bone_transversal1_M08_Layers=3,FT=16,BS=4,LR=0.001.png)
+<!--![Contrast](IMAGES\Result_bone_transversal1_M08_Layers=3,FT=16,BS=4,LR=0.001.png)
 
 ![Contrast](IMAGES\Result_bone_coronal_M08_Layers=3,FT=16,BS=4,LR=0.001.png)
 
-![Contrast](IMAGES\Result_bone_sagittal_M08_Layers=3,FT=16,BS=4,LR=0.001.png)
+![Contrast](IMAGES\Result_bone_sagittal_M08_Layers=3,FT=16,BS=4,LR=0.001.png)-->
 
 ***
 
