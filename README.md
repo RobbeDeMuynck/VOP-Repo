@@ -27,7 +27,7 @@ The model is trained until the validation loss has not decreased for 5 epochs. A
 ### Result
 Results for contrast enhancement:
 
-![Contrast](IMAGES\Result_bone_transversal1_M08_Layers=3,FT=16,BS=4,LR=0.001.png)
+![Contrast](VOP-Repo\IMAGES\Result_bone_transversal1_M08_Layers=3,FT=16,BS=4,LR=0.001.png)
 
 ![Contrast](IMAGES\Result_bone_coronal_M08_Layers=3,FT=16,BS=4,LR=0.001.png)
 
