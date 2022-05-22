@@ -60,7 +60,7 @@ print('Scan created')
 
 
 ################ create dicom image ###########################
-def write_dicom(pixel_array,filename):
+def write_dicom(pixel_array, filename):
 
     meta = pydicom.Dataset()
     meta.MediaStorageSOPClassUID = pydicom._storage_sopclass_uids.CTImageStorage
@@ -105,7 +105,7 @@ def write_dicom(pixel_array,filename):
 
     pydicom.dataset.validate_file_meta(ds.file_meta, enforce_standard=True)
     ds.PixelData = pixel_array.tobytes()
-    ds.save_as(r"Dicom scans/test5.dcm")
+    ds.save_as(f"Dicom scans/{filename}.dcm")
     return
 # print(scan[100])
 plt.imshow(scan[100], cmap='bone')
